@@ -1,5 +1,7 @@
 import list from './list.json'
 import cron from 'node-cron';
+//USERDB
+import { users, bot, notifications } from '../api.js';
 // COMMANDS
 import { Dashboard } from './dashboard/dashboard.js';
 import { Sortie } from './sortie/sortie.js';
@@ -8,9 +10,10 @@ import { Items } from './checker/items.js';
 import { Invasions } from './checker/invasions.js';
 import { Bounties } from './checker/bounties.js';
 import { Events } from './checker/events.js';
+import { Missions } from './sortie/missions.js';
+import { Modifiers } from './sortie/modifiers.js';
+import { Times } from './sortie/times.js';
 
-//USERDB
-import { users, bot } from '../api.js';
 
 /**
  * !!! NAMES MUST BE SAME AS ID !!!
@@ -20,9 +23,12 @@ export const alerts = new Alerts(getCommandFromId("alerts"));
 export const items = new Items(getCommandFromId("items"));
 export const invasions = new Invasions(getCommandFromId("invasions"));
 export const bounties = new Bounties(getCommandFromId("bounties"));
-export const events = new Events(getCommandFromId("events"))
+export const events = new Events(getCommandFromId("events"));
+export const missions = new Missions(getCommandFromId("missions"));
+export const modifiers = new Modifiers(getCommandFromId("modifiers"));
+export const times = new Times(getCommandFromId("times"));
 
-export const dashboard = new Dashboard(getCommandFromId("dashboard"), [sortie, alerts, events]);
+export const dashboard = new Dashboard(getCommandFromId("dashboard"), [sortie, alerts]);
 
 
 export function handleCmd(ctx, telegrafFunction, command, args) {
@@ -46,9 +52,6 @@ export function handleCmd(ctx, telegrafFunction, command, args) {
         case "items":
             items.execute(telegrafFunction, userId);
             break;
-        case "check":
-            alerts.check(userId).then(msg => console.log(msg));
-            break;
         case "filterAlerts":
             alerts.alert(telegrafFunction, userId, true)
             break;
@@ -66,6 +69,16 @@ export function handleCmd(ctx, telegrafFunction, command, args) {
             break;
         case "events":
             events.execute(telegrafFunction)
+            break;
+        case "missions":
+            missions.execute(telegrafFunction)
+            break;
+        case "modifiers":
+            modifiers.execute(telegrafFunction)
+            break;
+        case "time":
+            sortie.json.then(sortie =>
+                times.add(args, userId, sortie, telegrafFunction));
             break;
         default:
             break;
@@ -86,5 +99,8 @@ cron.schedule('*/10 * * * * *', () => {
             bot.telegram.sendMessage(user.id, msg, keyboard);
         }
         alerts.alert(telegrafFunction, user.id);
-    })
+    });
+    alerts.ids.then(ids => {
+        ids.forEach(id => notifications.add({ id: id }))
+    });
 });

@@ -51,5 +51,14 @@ export const utils = {
 
     link(text, url) {
         return "[" + text + "](" + url + ")";
+    },
+
+    isAssassination(mission) {
+        return mission.toUpperCase() === "ASSASSINATION"
+            || mission.toUpperCase() === "ASSASSINATE"
+    },
+
+    equals(a, b) {
+        return a.toUpperCase().trim() == b.toUpperCase().trim();
     }
 }

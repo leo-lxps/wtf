@@ -1,7 +1,7 @@
 import { Command } from "./command";
 import { FullKeyboard } from "../util/fullKeyboard";
 import { items } from "./handler";
-import { users } from "../api";
+import { users, notifications } from "../api";
 import { utils } from "../util/utils";
 
 
@@ -54,6 +54,7 @@ export class CheckCommand extends Command {
                 res(checks.reduce((rewards, check, index) =>
                     rewards.concat(
                         {
+                            id: check.id,
                             rewards: this.parseItems(this.rewardsOfCheck(check, ignoreCredits)),
                             message: this.translateCheck(check, index + 1)
                         }
@@ -66,15 +67,19 @@ export class CheckCommand extends Command {
     check(id, ignoreCredits) {
         let foundChecks = [];
         const items_ = items.get(id);
+        const savedIDS = notifications.ids;
         return new Promise(res => {
             this.rewards(ignoreCredits).then(checks => {
                 items_.forEach(item => {
                     checks.forEach(check => {
-                        check.rewards.forEach(reward => {
-                            if (reward.includes(item) && !foundChecks.includes(check.message)) {
-                                foundChecks.push(check.message);
-                            }
-                        });
+                        if (!savedIDS.includes(check.id)) {
+                            check.rewards.forEach(reward => {
+                                if (reward.includes(item)
+                                    && !foundChecks.includes(check.message)) {
+                                    foundChecks.push(check.message);
+                                }
+                            });
+                        }
                     });
                 });
                 res(foundChecks);
@@ -87,10 +92,8 @@ export class CheckCommand extends Command {
             this.check(id, ignoreCredits).then(messages => {
                 if (messages.length > 0) {
                     telegramFunction(messages.reduce((str, msg) => str += msg + "\n", ""), this.telegraf);
-                } else {
-                    telegramFunction(utils.bold("No " + this.id + " with current filter."), this.telegraf);
                 }
-            })
+            });
         } else {
             telegramFunction(utils.bold("You have alerts turned off in Settings"), this.telegraf);
         }

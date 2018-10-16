@@ -7,6 +7,8 @@ import { handleCmd } from './commands/handler';
 
 export const info = new Info("https://api.warframestat.us", "/pc");
 export const users = new Data("users");
+export const times = new Data("times");
+export const notifications = new Data("notifications");
 
 export let bot = new Bot(config.token);
 bot.use(commandParts());
@@ -17,7 +19,10 @@ bot.help((ctx) => {
 
 bot.command((ctx) => {
     const command = ctx.state.command.command;
-    const args = ctx.state.command.args.split(",");
+    const args = ctx.state.command.args
+        .split(",")
+        .filter(Boolean)
+        .map(a => a.trim());
     users.add(ctx.from);
     handleCmd(ctx, ctx.replyWithMarkdown, command, args);
 });

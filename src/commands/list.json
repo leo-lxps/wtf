@@ -60,13 +60,20 @@
         "id": "missions",
         "help": {
             "description": "Show bounties"
-        }
+        },
+        "fixed": "/missionTypes"
     },
     {
         "id": "modifiers",
         "help": {
             "description": "Show events"
         },
-        "fixed": "/missionTypes"
+        "sub": "/sortie"
+    },
+    {
+        "id": "times",
+        "help": {
+            "description": "Add times"
+        }
     }
 ]

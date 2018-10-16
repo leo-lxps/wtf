@@ -17,16 +17,16 @@ export class Events extends CheckCommand {
                 (e.faction ? ": " + e.faction : "") +
                 "\n"
                 : e.tooltip
-                    ? "*" + e.tooltip.replace("Tool Tip", "") + "*"
+                    ? "*" + e.tooltip.replace("Tool Tip", "") + "*\n"
                     : e.faction
-                        ? "*" + e.faction + "*"
-                        : "*Unknown Event:*";
+                        ? "*" + e.faction + "*\n"
+                        : "*Unknown Event:*\n";
         const score = e =>
             e.scoreLocTag
                 ? e.scoreLocTag +
                 " " +
                 (e.maximumScore ? ": `" + e.maximumScore + "`" : "") +
-                "\n"
+                "\n" + utils.tab(6)
                 : "";
         const rewards = e =>
             e.rewards
@@ -48,7 +48,8 @@ export class Events extends CheckCommand {
                         ) + "`\n"
                         : e.jobs
                             ? e.jobs.length > 0
-                                ? e.jobs.reduce((str, e, i) => str += this.translateJob(e, i + 1) + "\n", "")
+                                ? e.jobs.reduce((str, e, i) =>
+                                    str += this.translateJob(e, i + 1) + "\n", "")
                                 : noReward
                             : noReward
                     : typeof e.rewards == "string" || e.rewards instanceof String
@@ -56,15 +57,14 @@ export class Events extends CheckCommand {
                         : noReward
                 : e.jobs
                     ? e.jobs.length > 0
-                        ? e.jobs.reduce((str, e, i) => str += this.translateJob(e, i + 1) + "\n", "")
+                        ? e.jobs.reduce((str, e, i) =>
+                            str += this.translateJob(e, i + 1) + "\n", "")
                         : noReward
                     : noReward
         const node = e => (e.node ? "_Battle on " + e.node + "_\n" : "");
         const remain = e => (e.health ? "`" + e.health + "%` Remaining\n" : "");
         return desc(e) +
-            utils.tab(6) +
             score(e) +
-            utils.tab(6) +
             rewards(e) +
             utils.tab(6) +
             node(e) +

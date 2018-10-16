@@ -23,7 +23,9 @@ export class Info {
     }
 
     wfs({ sub, fixed } = {}) {
-        const extension = sub ? this.platform + sub : fixed ? fixed : "";
+        const extension = sub
+            ? this.platform + sub
+            : fixed ? fixed : "";
         return new Promise(res => {
             request.get({
                 url: this.base + extension,

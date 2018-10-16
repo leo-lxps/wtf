@@ -26,6 +26,10 @@ export class Data {
         return this.db.value()
     }
 
+    get ids() {
+        return this.data.map(i => i.id);
+    }
+
     getById(id) {
         return this.db.find({ id: id }).value();
     }
@@ -47,6 +51,11 @@ export class Data {
         } else {
             console.log(object, " has no id field")
         }
+    }
+
+    hasId(id) {
+        const item = this.db.find({ id: id }).value();
+        return item ? true : false
     }
 
     clear() {
