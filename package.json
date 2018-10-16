@@ -1,0 +1,30 @@
+{
+  "name": "wft",
+  "version": "0.0.1",
+  "description": "warframe helper for telegram",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "me",
+  "license": "MIT",
+  "dependencies": {
+    "@types/lodash": "^4.14.117",
+    "lowdb": "^1.0.0",
+    "moment": "^2.22.2",
+    "node-cron": "^2.0.3",
+    "request": "^2.88.0",
+    "request-json": "^0.6.3",
+    "telegraf": "^3.24.1",
+    "telegraf-command-parts": "^1.0.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.4",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-register": "^6.26.0"
+  }
+}

@@ -1,0 +1,9 @@
+*
+!/src/
+!/src/**
+!/resources/
+!/resources/**
+!package.json
+!start.js
+!.gitignore
+!LICENSE

@@ -1,0 +1,72 @@
+[
+    {
+        "id": "sortie",
+        "help": {
+            "description": "shows sortie information"
+        },
+        "sub": "/sortie"
+    },
+    {
+        "id": "alerts",
+        "help": {
+            "description": "Show Alerts"
+        },
+        "sub": "/alerts"
+    },
+    {
+        "id": "dashboard",
+        "help": {
+            "description": "Shows Information",
+            "variants": [
+                "dashboard",
+                "dash",
+                "d",
+                "DASHBOARD",
+                "DASH",
+                "D",
+                "Dashboard",
+                "Dash"
+            ]
+        }
+    },
+    {
+        "id": "items",
+        "help": {
+            "description": "Show alert items"
+        }
+    },
+    {
+        "id": "invasions",
+        "help": {
+            "description": "Show invasions"
+        },
+        "sub": "/invasions"
+    },
+    {
+        "id": "bounties",
+        "help": {
+            "description": "Show bounties"
+        },
+        "sub": "/syndicateMissions"
+    },
+    {
+        "id": "events",
+        "help": {
+            "description": "Show events"
+        },
+        "sub": "/events"
+    },
+    {
+        "id": "missions",
+        "help": {
+            "description": "Show bounties"
+        }
+    },
+    {
+        "id": "modifiers",
+        "help": {
+            "description": "Show events"
+        },
+        "fixed": "/missionTypes"
+    }
+]
