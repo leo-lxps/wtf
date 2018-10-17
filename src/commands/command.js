@@ -12,7 +12,7 @@ export class Command {
         this.h = help;
         this.msg = "No message set";
         this.keyboard = keyboard;
-        this.title = "`┣━` " + utils.bold(id.toUpperCase()) + " `━┫`\n";
+        this.title = "`━┫` " + utils.bold(id.toUpperCase()) + " `┣━`\n";
     }
 
     get inlineKeyboard() {

@@ -39,6 +39,29 @@ export const trader = new Trader(getCommandFromId("trader"));
 export const dashboard = new Dashboard(getCommandFromId("dashboard"),
     [sortie, infos, trader]);
 
+export function getCmd(id) {
+    switch (id) {
+        case "alerts":
+            return alerts
+        case "bounties":
+            return bounties
+        case "invasions":
+            return invasions
+        case "events":
+            return events
+        case "sortie":
+            return sortie
+        case "trader":
+            return trader
+        case "infos":
+            return infos
+        case "updates":
+            return updates
+        default:
+            break;
+    }
+}
+
 
 export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
     const userId = ctx.from.id;
@@ -58,11 +81,21 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
             items.remove(item, userId);
             command = "settings";
         }
+
+        if (command.split(".")[0] == "<") {
+            const item = command.split(".")[1];
+            dashboard.addItem(userId, item)
+            command = "configure";
+        } else if (command.split(".")[0] == ">") {
+            const item = command.split(".")[1];
+            dashboard.removeItem(userId, item)
+            command = "configure";
+        }
     }
 
     switch (command) {
         case "dashboard":
-            dashboard.execute(telegrafFunction);
+            dashboard.execute(telegrafFunction, userId);
             break;
         case "sortie":
             sortie.execute(telegrafFunction);
@@ -169,18 +202,20 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
         case "traderNotifications":
             ctx.answerCbQuery("Get Baro Ki'Teer notifications!", true)
             break;
-        case "⸻":
-            ctx.answerCbQuery("This is just a separator :)")
-            break;
         case "slap":
             search.slapped++;
             break;
-        default:
-            telegrafFunction("not implemented: " + command)
+        case "configure":
+            dashboard.config(telegrafFunction, userId)
             break;
-    }
-    if (isCb) {
-        ctx.answerCbQuery("Loading: " + command);
+        case "show":
+            ctx.answerCbQuery("This will be shown on your Dashboard!", true);
+            break;
+        case "hide":
+            ctx.answerCbQuery("This will not be shown on your Dashboard!", true);
+            break;
+        default:
+            break;
     }
 }
 

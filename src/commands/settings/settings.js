@@ -14,18 +14,18 @@ export class Settings extends Command {
 
         const user = users.db.find({ id: id }).value();
 
-        const on = (b) => b ? "> " + "ON" + " <": "ON";
-        const off = (b) => !b ? "> " + "OFF" + " <": "OFF";
+        const on = (b) => b ? "> " + "ON" + " <" : "ON";
+        const off = (b) => !b ? "> " + "OFF" + " <" : "OFF";
 
         let itemsKeys = user.items.map((item, i) =>
             [{ text: item.toUpperCase(), callback_data: "remove." + i }]
             , [])
 
-        itemsKeys = itemsKeys.reduce((all, one, i) => {
-            const ch = Math.floor(i / 3);
+        itemsKeys = [["━━━┫ REMOVE ITEMS ┣━━━"]].concat(itemsKeys.reduce((all, one, i) => {
+            const ch = Math.floor(i / 2);
             all[ch] = [].concat((all[ch] || []), one);
             return all
-        }, [])
+        }, []))
 
         const sortieKeys = [
             { text: "Sortie Notifications:", callback_data: "sortieNotifications" },
@@ -47,9 +47,11 @@ export class Settings extends Command {
             { text: on(user.notifyTrader), callback_data: "traderOn" },
             { text: off(user.notifyTrader), callback_data: "traderOff" }];
 
-        const separator = ["⸻"]
+        const configureDash = [{ text: "CONFIGURE DASHBOARD", callback_data: "configure" }]
 
-        const fullExtra = itemsKeys.concat([separator, sortieKeys, alertKeys, updateKeys, traderKeys, separator]);
+        const toggles = ["━━━┫ OPTIONS ┣━━━"]
+
+        const fullExtra = itemsKeys.concat([toggles, sortieKeys, alertKeys, updateKeys, traderKeys, configureDash]);
 
         this.keyboard = new FullKeyboard(
             this.command.id, fullExtra

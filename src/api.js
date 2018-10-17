@@ -16,11 +16,13 @@ export let bot = new Bot(config.token);
 bot.use(commandParts());
 
 bot.help((ctx) => {
-
+    ctx.replyWithMarkdown("*Your Homepage* 👉 /dashboard \n" +
+        "_Add items to filter with the search function, or by typing:_\n" +
+        "`/add <item> [, items]`\n\n_Feel free to click on everything!_\n*HAVE FUN! 😉*")
 });
 
 bot.start((ctx) => {
-    ctx.replyWithMarkdown("/dashboard")
+    ctx.replyWithMarkdown("👉 /dashboard\n👀 /help")
 });
 
 bot.command((ctx) => {

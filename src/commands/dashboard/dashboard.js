@@ -1,21 +1,86 @@
 import { Command } from "../command";
 import { FullKeyboard } from "../../util/fullKeyboard";
+import { users } from "../../api";
+import { getCmd } from "../handler";
 
 export class Dashboard extends Command {
-    constructor(command, commands) {
-        super(command, new FullKeyboard(command.id));
+    constructor(command, commands, extra) {
+        super(command, new FullKeyboard(command.id, extra));
         this.commands = commands;
-        this.separator = "\n\n";
+        this.separator = "`┣━━━━━━━━━━`";
+    }
+
+    getUserItems(id) {
+        const items = users.db.find({ id: id }).get("dashboardConfig").value();
+        if (items) {
+            return items;
+        }
+        this.setUserItems(id, ["sortie", "trader", "infos"]);
+        return ["sortie", "trader", "infos"];
+    }
+
+    setUserItems(id, items) {
+        users.db.find({ id: id }).assign({ dashboardConfig: items }).write();
+    }
+
+    addItem(id, item) {
+        users.db.find({ id: id }).get("dashboardConfig").push(item).write();
+    }
+
+    removeItem(id, item) {
+        let items = this.getUserItems(id);
+        const found = items.indexOf(item);
+        if (found > -1) {
+            items.splice(found, 1);
+            this.setUserItems(id, items);
+        }
+    }
+
+    /**
+     * CONFIG DASHBOARD
+     * SHOW     HIDE
+     * <        alerts
+     * <        bounties
+     * <        invasions
+     * <        events
+     * sortie   >
+     * trader   >
+     * infos    >
+     *
+     */
+    config(telegrafFunction, id) {
+
+        const items = this.getUserItems(id);
+        const cmdKey = (cmd) => items.includes(cmd)
+            ? [cmd, { text: ">", callback_data: ">." + cmd }]
+            : [{ text: "<", callback_data: "<." + cmd },
+                cmd];
+
+        const extra = [[{ text: "CONFIGURE DASHBOARD", callback_data: "configure" }],
+        ["SHOW", "HIDE"],
+        cmdKey("alerts"),
+        cmdKey("bounties"),
+        cmdKey("invasions"),
+        cmdKey("events"),
+        cmdKey("sortie"),
+        cmdKey("trader"),
+        cmdKey("infos"),
+        cmdKey("updates")];
+
+        this.execute(telegrafFunction, id, extra);
     }
 
     get message() {
-        return this.commands.map(cmd => cmd.message);
+
+        return this.commands.map(cmd => getCmd(cmd).message);
     }
 
-    async execute(telegramFunction) {
-        telegramFunction(
+    async execute(telegrafFunction, id, extra) {
+        this.commands = this.getUserItems(id);
+        this.inlineKeyboard = new FullKeyboard(this.command.id, extra);
+        telegrafFunction(
             this.title + "\n" +
-            this.message.join(this.separator), this.telegraf
+            this.separator + this.message.join("\n\n" + this.separator), this.telegraf
         )
 
     }
