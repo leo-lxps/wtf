@@ -1,5 +1,5 @@
 import { utils } from "../util/utils";
-import { info } from "../api";
+import { state } from "../api";
 
 export class Command {
     constructor(command, keyboard) {
@@ -15,12 +15,20 @@ export class Command {
         this.title = utils.bold(id.toUpperCase());
     }
 
+    get inlineKeyboard() {
+        return this.keyboard;
+    }
+
+    set inlineKeyboard(keyboard) {
+        this.keyboard = keyboard
+    }
+
     set message(msg) {
         this.msg = msg;
     }
 
     get message() {
-        return this.message;
+        return this.msg;
     }
 
     get telegraf() {
@@ -55,16 +63,8 @@ export class Command {
     }
 
     get json() {
-        if (this.command.sub) {
-            return new Promise(res =>
-                info.wfs({ sub: this.command.sub })
-                    .then(json => res(json))
-            )
-        } else {
-            return new Promise(res =>
-                info.wfs({ fixed: this.command.fixed })
-                    .then(json => res(json))
-            )
+        if (this.command.sub && state.ws) {
+            return state.ws[this.command.sub]
         }
     }
 

@@ -11,9 +11,9 @@ export class CheckCommand extends Command {
     }
 
     get message() {
-        return new Promise(res => this.json.then(checks => {
-            res(this.translate(checks))
-        }));
+        if (this.json) {
+            return this.translate(this.json)
+        }
     }
 
     async execute(telegramFunction) {
@@ -21,7 +21,9 @@ export class CheckCommand extends Command {
     }
 
     get ids() {
-        return new Promise(res => this.json.then(check => res(check.map(c => c.id))))
+        if (this.json) {
+            return this.json.map(c => c.id)
+        }
     }
 
     translate(checks) {
@@ -33,13 +35,6 @@ export class CheckCommand extends Command {
             , "")
     }
 
-    /**
-     * Translate a check object to string
-     *
-     * @param {check} check type of check
-     * @param {number} index place in array
-     * @returns {String}
-     */
     translateCheck(check, index) {
         throw Error("translateCheck is not implemented")
     }
@@ -49,51 +44,48 @@ export class CheckCommand extends Command {
     }
 
     rewards(ignoreCredits) {
-        return new Promise(res => {
-            this.json.then(checks => {
-                res(checks.reduce((rewards, check, index) =>
-                    rewards.concat(
-                        {
-                            id: check.id,
-                            rewards: this.parseItems(this.rewardsOfCheck(check, ignoreCredits)),
-                            message: this.translateCheck(check, index + 1)
-                        }
-                    ), [])
-                )
-            })
-        });
+        if (this.json) {
+            return this.json.reduce((rewards, check, index) =>
+                rewards.concat(
+                    {
+                        id: check.id,
+                        rewards: this.parseItems(this.rewardsOfCheck(check, ignoreCredits)),
+                        message: this.translateCheck(check, index + 1)
+                    }
+                ), [])
+        }
     }
 
-    check(id, ignoreCredits) {
+    check(id, { ignoreCredits, ignoreNotified }) {
         let foundChecks = [];
-        const items_ = items.get(id);
-        const savedIDS = notifications.ids;
-        return new Promise(res => {
-            this.rewards(ignoreCredits).then(checks => {
-                items_.forEach(item => {
-                    checks.forEach(check => {
-                        if (!savedIDS.includes(check.id)) {
-                            check.rewards.forEach(reward => {
-                                if (reward.includes(item)
-                                    && !foundChecks.includes(check.message)) {
-                                    foundChecks.push(check.message);
-                                }
-                            });
-                        }
-                    });
+        if (this.json) {
+            const items_ = items.get(id);
+            const savedIDS = ignoreNotified ? [] : notifications.ids;
+            items_.forEach(item => {
+                this.rewards(ignoreCredits).forEach(check => {
+                    if (!savedIDS.includes(check.id)) {
+                        check.rewards.forEach(reward => {
+                            if (reward.includes(item)
+                                && !foundChecks.includes(check.message)) {
+                                foundChecks.push(check.message);
+                            }
+                        });
+                    }
                 });
-                res(foundChecks);
             });
-        });
+        }
+        return foundChecks;
     }
 
-    alert(telegramFunction, id, ignoreCredits) {
+    alert(telegramFunction, id, { ignoreCredits, ignoreNotified }
+        = { ignoreCredits: false, ignoreNotified: false }) {
         if (users.db.find({ id: id }).value().notifyAlerts) {
-            this.check(id, ignoreCredits).then(messages => {
-                if (messages.length > 0) {
-                    telegramFunction(messages.reduce((str, msg) => str += msg + "\n", ""), this.telegraf);
-                }
-            });
+            const messages = this.check(id, { ignoreCredits, ignoreNotified });
+            if (messages.length > 0) {
+                telegramFunction(messages.reduce((str, msg) => str += msg + "\n", ""), this.telegraf);
+            } else if (ignoreNotified) {
+                telegramFunction(utils.bold("You have no " + this.title + " with current Filter."), this.telegraf);
+            }
         } else {
             telegramFunction(utils.bold("You have alerts turned off in Settings"), this.telegraf);
         }

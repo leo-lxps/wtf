@@ -37,7 +37,6 @@ export class Items extends Command {
             this.notify(id, true);
             let items_ = this.get(id);
             this.parseItems(items).forEach(item => {
-                console.log(item)
                 const ind = items_.indexOf(item.toUpperCase());
                 if (ind > -1 && ind < items_.length) {
                     items_.splice(ind, 1);

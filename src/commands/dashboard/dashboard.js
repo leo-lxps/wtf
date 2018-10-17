@@ -9,23 +9,15 @@ export class Dashboard extends Command {
     }
 
     get message() {
-        var promises = this.commands.map(
-            cmd => new Promise(
-                res => cmd.json.then(json => {
-                    res(cmd.translate(json))
-                })
-            )
-        );
-        return Promise.all(promises);
+        return this.commands.map(cmd => cmd.message);
     }
 
     async execute(telegramFunction) {
-        await this.message.then(v =>
-            telegramFunction(
-                this.title + "\n" +
-                v.join(this.separator), this.telegraf
-            )
-        );
+        telegramFunction(
+            this.title + "\n" +
+            this.message.join(this.separator), this.telegraf
+        )
+
     }
 }
 

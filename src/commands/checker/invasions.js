@@ -4,7 +4,7 @@ import { FullKeyboard } from "../../util/fullKeyboard";
 
 export class Invasions extends CheckCommand {
     constructor(command) {
-        super(command, new FullKeyboard(command.id, [["invasions", "bounties", "events"]]))
+        super(command, new FullKeyboard(command.id, [["filter.invasions"],["invasions", "bounties", "events"]]))
     }
 
     translateCheck(invasion, index) {

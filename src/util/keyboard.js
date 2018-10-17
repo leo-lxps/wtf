@@ -29,13 +29,19 @@ export class Keyboard {
     }
 
     inlineKey(id) {
-        if (id == "search") {
-            return {
-                text: id.toUpperCase(), switch_inline_query_current_chat: this.search
-            };
-        } else {
-            const name = this.text(id);
-            return { text: name, callback_data: id };
+        if (typeof id == "string") {
+            if (id == "search") {
+                return {
+                    text: id.toUpperCase(), switch_inline_query_current_chat: this.search
+                };
+            } else {
+                const name = this.text(id);
+                return { text: name, callback_data: id };
+            }
+        } else if (id.text && (id.callback_data
+            || id.switch_inline_query_current_chat
+            || id.url)) {
+            return id
         }
     }
 

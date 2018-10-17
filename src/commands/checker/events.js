@@ -4,7 +4,7 @@ import { FullKeyboard } from "../../util/fullKeyboard";
 
 export class Events extends CheckCommand {
     constructor(command) {
-        super(command, new FullKeyboard(command.id, [["invasions", "bounties", "events"]]))
+        super(command, new FullKeyboard(command.id, [["filter.events"], ["invasions", "bounties", "events"]]))
     }
 
     translateCheck(e, index) {
@@ -88,6 +88,7 @@ export class Events extends CheckCommand {
     }
 
     rewardsOfCheck(event, ignoreCredits) {
-        return
+        return event.jobs.reduce((rew, j) =>
+            rew.concat(j.rewardPool), [])
     }
 }

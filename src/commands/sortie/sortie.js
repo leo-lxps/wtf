@@ -1,8 +1,8 @@
-import { Command } from "../command";
 import { utils } from "../../util/utils";
 import { FullKeyboard } from "../../util/fullKeyboard";
 import { times } from "../handler";
-import { users } from "../../api";
+import { users, notifications } from "../../api";
+import { Command } from "../command";
 
 export class Sortie extends Command {
     constructor(command, keyboard) {
@@ -10,9 +10,9 @@ export class Sortie extends Command {
     }
 
     get message() {
-        return new Promise(res => this.json.then(sortie => {
-            res(this.translate(sortie))
-        }));
+        if (this.json) {
+            return this.translate(this.json);
+        }
     }
 
     async execute(telegramFunction) {
@@ -38,6 +38,21 @@ export class Sortie extends Command {
                 ? mission.missionType + " - " + boss.replace(/\b\w/g, l => l.toUpperCase()) + " [" + time.findTime(boss, true).string + "]"
                 : mission.missionType) + " [" + times.findTime(mission.missionType).string + "]") + "\n" +
             utils.tab(6) + utils.code(mission.modifier.toUpperCase().split(":").join("\n" + utils.tab(3)));
+    }
+
+    alert(telegrafFunction) {
+        if (this.json) {
+            const savedIDS = notifications.ids;
+            if (!savedIDS.includes(this.json.id)) {
+                this.execute(telegrafFunction);
+            }
+        }
+    }
+
+    get ids() {
+        if (this.json) {
+            return [this.json.id]
+        }
     }
 
     notify(id, boolean) {
