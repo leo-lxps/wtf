@@ -2,7 +2,7 @@ import { Command } from "../command";
 import { utils } from "../../util/utils";
 import { FullKeyboard } from "../../util/fullKeyboard";
 import { times } from "../handler";
-import { users, state } from "../../api";
+import { users, state, notifications } from "../../api";
 import moment from "moment";
 
 
@@ -17,6 +17,25 @@ export class Trader extends Command {
         if (this.json) {
             return this.translate(this.json)
         }
+    }
+
+    alert(telegrafFunction) {
+        const savedIDS = notifications.ids;
+        const canFire = this.ids.reduce((b, id) =>
+            b = !savedIDS.includes(id) && b, true);
+        if (canFire) {
+            this.execute(telegrafFunction);
+        }
+    }
+
+    get ids() {
+        if (this.json) {
+            return [this.json.id]
+        }
+    }
+
+    notify(id, boolean) {
+        users.db.find({ id: id }).assign({ notifyTrader: boolean }).write();
     }
 
     translate(trader) {

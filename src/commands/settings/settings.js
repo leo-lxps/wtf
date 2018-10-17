@@ -10,12 +10,22 @@ export class Settings extends Command {
 
     execute(telegramFunction, id) {
         this.message = this.title + "\n" +
-            utils.italic("Change your settings here!");
+            utils.italic("Change your settings here! \n\nClick on items To remove them from your Filter.");
 
         const user = users.db.find({ id: id }).value();
 
-        const on = (b) => b ? ">" + "ON" : "ON";
-        const off = (b) => !b ? ">" + "OFF" : "OFF";
+        const on = (b) => b ? "> " + "ON" + " <": "ON";
+        const off = (b) => !b ? "> " + "OFF" + " <": "OFF";
+
+        let itemsKeys = user.items.map((item, i) =>
+            [{ text: item.toUpperCase(), callback_data: "remove." + i }]
+            , [])
+
+        itemsKeys = itemsKeys.reduce((all, one, i) => {
+            const ch = Math.floor(i / 3);
+            all[ch] = [].concat((all[ch] || []), one);
+            return all
+        }, [])
 
         const sortieKeys = [
             { text: "Sortie Notifications:", callback_data: "sortieNotifications" },
@@ -33,14 +43,16 @@ export class Settings extends Command {
             { text: off(user.notifyUpdates), callback_data: "updateOff" }];
 
         const traderKeys = [
-            { text: "Update Notifications:", callback_data: "updateNotifications" },
-            { text: on(user.notifyUpdates), callback_data: "updateOn" },
-            { text: off(user.notifyUpdates), callback_data: "updateOff" }];
+            { text: "Trader Notifications:", callback_data: "traderNotifications" },
+            { text: on(user.notifyTrader), callback_data: "traderOn" },
+            { text: off(user.notifyTrader), callback_data: "traderOff" }];
 
         const separator = ["⸻"]
 
+        const fullExtra = itemsKeys.concat([separator, sortieKeys, alertKeys, updateKeys, traderKeys, separator]);
+
         this.keyboard = new FullKeyboard(
-            this.command.id, [sortieKeys, alertKeys, updateKeys, separator]
+            this.command.id, fullExtra
         );
 
         telegramFunction(this.message, this.telegraf);

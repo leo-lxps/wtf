@@ -25,7 +25,7 @@ export class Keyboard {
     }
 
     text(name) {
-        return name === this.selected ? "REFRESH" : name.toUpperCase();
+        return name === this.selected ? "> " + name.toUpperCase() + " <" : name.toUpperCase();
     }
 
     inlineKey(id) {

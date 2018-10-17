@@ -84,7 +84,7 @@ export class CheckCommand extends Command {
             if (messages.length > 0) {
                 telegramFunction(messages.reduce((str, msg) => str += msg + "\n", ""), this.telegraf);
             } else if (ignoreNotified) {
-                telegramFunction(utils.bold("You have no " + this.title + " with current Filter."), this.telegraf);
+                telegramFunction(utils.bold("You have no " + this.id + " with current Filter."), this.telegraf);
             }
         } else {
             telegramFunction(utils.bold("You have alerts turned off in Settings"), this.telegraf);

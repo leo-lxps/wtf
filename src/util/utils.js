@@ -37,20 +37,28 @@ export const utils = {
         return "\t".repeat(n)
     },
 
+    clean(msg) {
+        return msg.toString().replace("*", "x").replace("`", "'").replace("_", " ");
+    },
+
     italic(msg) {
-        return "_" + msg + "_";
+        return "_" + this.clean(msg) + "_";
     },
 
     bold(msg) {
-        return "*" + msg + "*";
+        return "*" + this.clean(msg) + "*";
     },
 
     code(msg) {
-        return "`" + msg + "`";
+        return "`" + this.clean(msg) + "`";
     },
 
     link(text, url) {
-        return "[" + text + "](" + url + ")";
+        return "[" + this.clean(text) + "](" + url + ")";
+    },
+
+    title(msg) {
+        return "`┣━` " + utils.bold(msg.toUpperCase()) + " `━┫`\n";
     },
 
     isAssassination(mission) {

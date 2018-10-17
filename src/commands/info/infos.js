@@ -14,7 +14,7 @@ export class Infos extends Command {
     }
 
     get message() {
-        return this.translate()
+        return this.translate();
     }
 
     translate() {

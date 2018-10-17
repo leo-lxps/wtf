@@ -8,11 +8,11 @@ export class Command {
         if (!id) {
             throw "Id for Command not defined"
         }
-        this.ID = id
-        this.h = help
-        this.msg = "No message set"
+        this.ID = id;
+        this.h = help;
+        this.msg = "No message set";
         this.keyboard = keyboard;
-        this.title = utils.bold(id.toUpperCase());
+        this.title = "`┣━` " + utils.bold(id.toUpperCase()) + " `━┫`\n";
     }
 
     get inlineKeyboard() {

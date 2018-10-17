@@ -1,10 +1,10 @@
 import request from 'request-promise';
 import { users, bot, notifications } from '../api';
-import { alerts, sortie, updates } from '../commands/handler';
+import { alerts, sortie, updates, invasions, events, bounties, trader } from '../commands/handler';
 
 export class State {
     constructor(base, platform, options = {
-        interval: 30000,
+        interval: 60000,
         intervalFixed: 600000
     }) {
         this.b = base;
@@ -22,7 +22,7 @@ export class State {
     refresh() {
         request.get({ url: this.base + this.platform, json: true })
             .then(res => {
-                console.log("State Loaded!");
+                // UPDATE world state
                 this.ws = res;
 
                 // Check for new alerts
@@ -31,6 +31,9 @@ export class State {
                         bot.telegram.sendMessage(user.id, msg, keyboard);
                     }
                     alerts.alert(telegrafFunction, user.id);
+                    invasions.alert(telegrafFunction, user.id);
+                    events.alert(telegrafFunction, user.id);
+                    bounties.alert(telegrafFunction, user.id);
                 });
                 // Check for new sortie
                 users.data.filter(u => u.notifySortie).forEach(user => {
@@ -48,13 +51,24 @@ export class State {
                     updates.alert(telegrafFunction, user.id);
                 });
 
+                // Check for new trader
+                users.data.filter(u => u.notifyUpdates).forEach(user => {
+                    const telegrafFunction = (msg, keyboard) => {
+                        bot.telegram.sendMessage(user.id, msg, keyboard);
+                    }
+                    trader.alert(telegrafFunction, user.id);
+                });
+
                 // Save ids
                 alerts.ids.forEach(id => notifications.add({ id: id }));
+                invasions.ids.forEach(id => notifications.add({ id: id }));
+                events.ids.forEach(id => notifications.add({ id: id }));
+                bounties.ids.forEach(id => notifications.add({ id: id }));
                 sortie.ids.forEach(id => notifications.add({ id: id }));
                 updates.ids.forEach(id => notifications.add({ id: id }));
+                trader.ids.forEach(id => notifications.add({ id: id }));
             })
             .catch(err => {
-                console.log(err)
             })
     }
 

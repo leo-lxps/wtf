@@ -43,7 +43,7 @@ export class Data {
     }
 
     add(object) {
-        if (object.id) {
+        if (object.id && !object.is_bot) {
             const found = this.getById(object.id)
             if (!found) {
                 this.push(object)

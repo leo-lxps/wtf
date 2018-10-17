@@ -1,7 +1,7 @@
 import list from './list.json'
 import cron from 'node-cron';
 //USERDB
-import { users, bot, notifications } from '../api.js';
+import { users, bot, notifications, state, search } from '../api.js';
 // COMMANDS
 import { Dashboard } from './dashboard/dashboard.js';
 import { Sortie } from './sortie/sortie.js';
@@ -37,13 +37,29 @@ export const infos = new Infos(getCommandFromId("infos"));
 export const trader = new Trader(getCommandFromId("trader"));
 
 export const dashboard = new Dashboard(getCommandFromId("dashboard"),
-    [sortie,
-        infos,
-        trader]);
+    [sortie, infos, trader]);
 
 
 export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
     const userId = ctx.from.id;
+    if (!state.ws) {
+        telegrafFunction("Something went wrong! \nPlease try again")
+        return;
+    }
+
+    if (command.includes(".")) {
+        if (command.split(".")[0] == "add") {
+            const item = [command.split(".")[1]];
+            items.add(item, userId);
+            command = "settings";
+        } else if (command.split(".")[0] == "remove") {
+            const ind = [command.split(".")[1]];
+            const item = [items.get(userId)[ind]];
+            items.remove(item, userId);
+            command = "settings";
+        }
+    }
+
     switch (command) {
         case "dashboard":
             dashboard.execute(telegrafFunction);
@@ -142,11 +158,22 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
         case "updateNotifications":
             ctx.answerCbQuery("Get new Update notifications!", true)
             break;
-        case "updates":
-            console.log(updates.current)
+        case "traderOn":
+            trader.notify(userId, true);
+            settings.execute(telegrafFunction, userId);
+            break;
+        case "traderOff":
+            trader.notify(userId, false);
+            settings.execute(telegrafFunction, userId);
+            break;
+        case "traderNotifications":
+            ctx.answerCbQuery("Get Baro Ki'Teer notifications!", true)
             break;
         case "⸻":
             ctx.answerCbQuery("This is just a separator :)")
+            break;
+        case "slap":
+            search.slapped++;
             break;
         default:
             telegrafFunction("not implemented: " + command)
@@ -160,19 +187,3 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
 function getCommandFromId(id) {
     return list.find(cmd => cmd.id === id);
 }
-
-// ================= SCHEDULES ===============
-/**
- * ALERT CHECKING
- */
-// cron.schedule('*/10 * * * * *', () => {
-//     users.data.filter(u => u.notifyAlerts).forEach(user => {
-//         const telegrafFunction = (msg, keyboard) => {
-//             bot.telegram.sendMessage(user.id, msg, keyboard);
-//         }
-//         alerts.alert(telegrafFunction, user.id);
-//     });
-
-//     alerts.ids.forEach(id => notifications.add({ id: id }))
-
-// });

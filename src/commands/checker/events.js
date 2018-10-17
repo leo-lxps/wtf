@@ -4,7 +4,7 @@ import { FullKeyboard } from "../../util/fullKeyboard";
 
 export class Events extends CheckCommand {
     constructor(command) {
-        super(command, new FullKeyboard(command.id, [["filter.events"], ["invasions", "bounties", "events"]]))
+        super(command, new FullKeyboard(command.id, [[{ text: "FILTER", callback_data: "filter.events" }], ["invasions", "bounties", "events"]]))
     }
 
     translateCheck(e, index) {
