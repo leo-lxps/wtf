@@ -35,3 +35,8 @@ Commands can be found and edited in [list.json](https://github.com/leo-lxps/wtf/
 - [trader](https://github.com/leo-lxps/wtf/blob/master/src/commands/info/trader.js)
 - [updates](https://github.com/leo-lxps/wtf/blob/master/src/commands/info/updates.js)
 - [infos](https://github.com/leo-lxps/wtf/blob/master/src/commands/info/infos.js)
+
+
+#### settings
+
+- [settings](https://github.com/leo-lxps/wtf/blob/master/src/commands/settings/settings.js)
