@@ -22,15 +22,15 @@ export class Settings extends Command {
             [{ text: item.toUpperCase(), callback_data: "remove." + i }]
             , []) : []
 
-        itemsKeys = [["━━━┫ REMOVE ITEMS ┣━━━"]].concat(itemsKeys.reduce((all, one, i) => {
+        itemsKeys = [[utils.menu("remove items")]].concat(itemsKeys.reduce((all, one, i) => {
             const ch = Math.floor(i / 2);
             all[ch] = [].concat((all[ch] || []), one);
             return all
         }, []))
 
 
-        const toggles = ["━━━┫ OPTIONS ┣━━━"];
-        const infoOpt = ["NOTIFICATIONS:", "ON", "OFF"];
+        const toggles = [utils.menu("options")];
+        const infoOpt = ["NOTIFICATIONS", "ON", "OFF"];
 
         const sortieKeys = [
             { text: "SORTIE:", callback_data: "sortieNotifications" },

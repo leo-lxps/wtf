@@ -7,7 +7,7 @@ export class Events extends CheckCommand {
         super(command)
     }
 
-    translateCheck(e, index) {
+    translateCheck(e) {
         const noReward = "No reward";
         const desc = e =>
             e.description
@@ -49,7 +49,7 @@ export class Events extends CheckCommand {
                         : e.jobs
                             ? e.jobs.length > 0
                                 ? e.jobs.reduce((str, e, i) =>
-                                    str += this.translateJob(e, i + 1) + "\n", "")
+                                    str += this.translateJob(e) + "\n", "")
                                 : noReward
                             : noReward
                     : typeof e.rewards == "string" || e.rewards instanceof String
@@ -58,7 +58,7 @@ export class Events extends CheckCommand {
                 : e.jobs
                     ? e.jobs.length > 0
                         ? e.jobs.reduce((str, e, i) =>
-                            str += this.translateJob(e, i + 1) + "\n", "")
+                            str += this.translateJob(e) + "\n", "")
                         : noReward
                     : noReward
         const node = e => (e.node ? "_Battle on " + e.node + "_\n" : "");
@@ -66,16 +66,15 @@ export class Events extends CheckCommand {
         return desc(e) +
             score(e) +
             rewards(e) +
-            utils.tab(6) +
-            node(e) +
+            node(e) + "\n" +
             utils.italic("Ends " + utils.fromNow(e.expiry)) +
             " | " +
             remain(e);
 
     }
 
-    translateJob(job, index) {
-        return utils.bold(index + ". " + job.type +
+    translateJob(job) {
+        return utils.code("━┫ ") + utils.bold(job.type +
             " (" + job.enemyLevels[0] + " - " + job.enemyLevels[1] + ") [" +
             job.standingStages.reduce((sum, s) =>
                 sum += s, 0

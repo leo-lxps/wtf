@@ -8,14 +8,16 @@ export class Invasions extends CheckCommand {
     }
 
     translateCheck(invasion, index) {
-        const reward = (invasion.vsInfestation
-            ? invasion.defenderReward.asString
-            : invasion.attackerReward.asString + " | " + invasion.defenderReward.asString)
-        return utils.bold(
-            index + ". " + invasion.desc +
-            " (" + Math.abs(invasion.count) + "/ " + invasion.requiredRuns + ")") + "\n" +
-            utils.tab(6) + utils.code(reward.toUpperCase()) + "\n" +
-            utils.tab(6) + utils.italic("Start " + utils.fromNow(invasion.activation) + " > Ends in " + invasion.eta);
+        if (!invasion.completed) {
+            const reward = (invasion.vsInfestation
+                ? invasion.defenderReward.asString
+                : invasion.attackerReward.asString + " | " + invasion.defenderReward.asString)
+            return utils.code("━┫ ") + utils.bold(invasion.desc +
+                " (" + Math.abs(invasion.count) + "/ " + invasion.requiredRuns + ")") + "\n" +
+                utils.tab(6) + utils.code(reward.toUpperCase()) + "\n" +
+                utils.tab(6) + utils.italic("Start " + utils.fromNow(invasion.activation) + " > Ends in " + invasion.eta);
+        }
+        return ""
     }
 
     rewardsOfCheck(invasion, ignoreCredits) {

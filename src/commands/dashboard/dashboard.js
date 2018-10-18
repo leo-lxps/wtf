@@ -2,6 +2,7 @@ import { Command } from "../command";
 import { FullKeyboard } from "../../util/fullKeyboard";
 import { users } from "../../api";
 import { getCmd } from "../handler";
+import { utils } from "../../util/utils";
 
 export class Dashboard extends Command {
     constructor(command, commands, extra) {
@@ -56,7 +57,7 @@ export class Dashboard extends Command {
             : [{ text: "◄", callback_data: "<." + cmd },
                 cmd];
 
-        const extra = [[{ text: "CONFIGURE DASHBOARD", callback_data: "configure" }],
+        const extra = [[{ text: utils.menu("configure dashboard"), callback_data: "configure" }],
         ["SHOW", "HIDE"],
         cmdKey("alerts"),
         cmdKey("bounties"),

@@ -1,6 +1,7 @@
 import { Keyboard } from "./keyboard";
+import { utils } from "./utils";
 
-let layout = [["━━━┫ MENU ┣━━━"],
+let layout = [[utils.menu("menu")],
 ["dashboard", "sortie", "alerts"],
 ["infos", "settings", "search"]
 ]

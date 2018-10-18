@@ -7,11 +7,11 @@ export class Bounties extends CheckCommand {
         super(command)
     }
 
-    translateCheck(bounties, index) {
+    translateCheck(bounties) {
         if (bounties.syndicate == "Ostrons") {
             return utils.bold(bounties.syndicate) + "\n" +
-                bounties.jobs.reduce((str, job, index) => str += this.translateJob(job, index + 1) + "\n", "") +
-                utils.tab(6) + utils.italic("Expires " + utils.fromNow(bounties.expiry))
+                bounties.jobs.reduce((str, job) => str += this.translateJob(job) + "\n", "") + "\n" +
+                utils.italic("Expires " + utils.fromNow(bounties.expiry))
         }
         return "";
     }
@@ -23,16 +23,12 @@ export class Bounties extends CheckCommand {
         return [];
     }
 
-    translateJob(job, index) {
-        return utils.bold(index + ". " + job.type +
+    translateJob(job) {
+        return utils.code("━┫ ") + utils.bold(job.type +
             " (" + job.enemyLevels[0] + " - " + job.enemyLevels[1] + ") [" +
             job.standingStages.reduce((sum, s) =>
                 sum += s, 0
             ) + "]") + "\n" +
-            utils.code(utils.tab(3) + job.rewardPool.reduce((str, r, i) =>
-                (i + 1) % 2 == 0
-                    ? str += r + ",\n" + utils.tab(3)
-                    : str += r + ", "
-                , "").toUpperCase())
+            utils.code(utils.tab(3) + "... " + job.rewardPool.slice(-2).join(" | ").toUpperCase())
     }
 }
