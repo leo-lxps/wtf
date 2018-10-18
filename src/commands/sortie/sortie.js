@@ -9,14 +9,14 @@ export class Sortie extends Command {
         super(command, keyboard ? keyboard : new FullKeyboard(command.id, [["missions", "modifiers"]]));
     }
 
-    get message() {
+    message() {
         if (this.json) {
             return this.translate(this.json);
         }
     }
 
     async execute(telegramFunction) {
-        telegramFunction(await this.message, this.telegraf);
+        telegramFunction(await this.message(), this.telegraf);
     }
 
     translate(sortie) {

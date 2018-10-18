@@ -71,9 +71,11 @@ export class Dashboard extends Command {
         this.execute(telegrafFunction, id, extra);
     }
 
-    get message() {
-
-        return this.commands.map(cmd => getCmd(cmd).message);
+    message(id) {
+        return this.commands.map(cmd =>
+            getCmd(cmd).message(true, id))
+            .filter(Boolean)
+            .join("\n\n" + this.separator);
     }
 
     async execute(telegrafFunction, id, extra) {
@@ -81,7 +83,7 @@ export class Dashboard extends Command {
         this.inlineKeyboard = new FullKeyboard(this.command.id, extra);
         telegrafFunction(
             this.title + "\n" +
-            this.separator + this.message.join("\n\n" + this.separator), this.telegraf
+            this.separator + this.message(id), this.telegraf
         )
 
     }

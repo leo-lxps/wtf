@@ -13,7 +13,7 @@ export class Trader extends Command {
         this.nightEmote = "🌙";
     }
 
-    get message() {
+    message() {
         if (this.json) {
             return this.translate(this.json)
         }

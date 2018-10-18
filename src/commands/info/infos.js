@@ -13,7 +13,7 @@ export class Infos extends Command {
         this.nightEmote = "🌙";
     }
 
-    get message() {
+    message() {
         return this.translate();
     }
 

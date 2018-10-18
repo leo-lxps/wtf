@@ -9,7 +9,7 @@ export class Settings extends Command {
     }
 
     execute(telegramFunction, id) {
-        this.message = this.title + "\n" +
+        this.msg = this.title + "\n" +
             utils.bold("REMOVE ITEMS: ") + utils.italic("Click on items to remove them from your Filter.\n\n") +
             utils.bold("OPTIONS: ") + utils.italic("Change your notification settings!");
 
@@ -60,7 +60,7 @@ export class Settings extends Command {
             this.command.id, fullExtra
         );
 
-        telegramFunction(this.message, this.telegraf);
+        telegramFunction(this.message(), this.telegraf);
     }
 
 }

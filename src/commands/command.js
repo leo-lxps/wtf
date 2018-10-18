@@ -23,11 +23,7 @@ export class Command {
         this.keyboard = keyboard
     }
 
-    set message(msg) {
-        this.msg = msg;
-    }
-
-    get message() {
+    message() {
         return this.msg;
     }
 
@@ -51,11 +47,11 @@ export class Command {
      * execute command
      */
     execute(telegramFunction) {
-        telegramFunction(this.message, this.telegraf);
+        telegramFunction(this.message(), this.telegraf);
     }
 
     addToMsg(messagePart) {
-        this.message += messagePart;
+        this.msg = this.message() + messagePart;
     }
 
     translate(command) {

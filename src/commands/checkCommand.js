@@ -10,15 +10,15 @@ export class CheckCommand extends Command {
         super(command, new AlertKeyboard(command.id))
     }
 
-    get message() {
+    message(filtered, id) {
         if (this.json) {
-            return this.translate(this.json)
+            return this.translate(this.json, filtered, id)
         }
     }
 
     async execute(telegramFunction) {
         this.inlineKeyboard = new AlertKeyboard(this.command.id, false);
-        telegramFunction(await this.message, this.telegraf);
+        telegramFunction(await this.message(), this.telegraf);
     }
 
     get ids() {
@@ -27,13 +27,23 @@ export class CheckCommand extends Command {
         }
     }
 
-    translate(checks) {
-        return this.title + "\n" + checks.reduce(
+    translate(checks, filtered, id) {
+        const cmds = filtered
+            ? this.check(id, { ignoreCredits: false, ignoreNotified: true })
+                .map(c => c.check)
+            : checks
+
+        const msg = cmds.reduce(
             (str, check, index) =>
                 str += this.translateCheck(check, index + 1)
                     ? this.translateCheck(check, index + 1) + "\n"
                     : ""
-            , "")
+            , "");
+        if (msg) {
+            return this.title + "\n" + msg;
+        } else {
+            return "";
+        }
     }
 
     translateCheck(check, index) {
@@ -50,6 +60,7 @@ export class CheckCommand extends Command {
                 rewards.concat(
                     {
                         id: check.id,
+                        check: check,
                         rewards: this.parseItems(this.rewardsOfCheck(check, ignoreCredits)),
                         message: this.translateCheck(check, index + 1)
                     }
@@ -67,8 +78,8 @@ export class CheckCommand extends Command {
                     if (!savedIDS.includes(check.id)) {
                         check.rewards.forEach(reward => {
                             if (reward.includes(item)
-                                && !foundChecks.includes(check.message)) {
-                                foundChecks.push(check.message);
+                                && !foundChecks.includes(check)) {
+                                foundChecks.push(check);
                             }
                         });
                     }
@@ -82,7 +93,7 @@ export class CheckCommand extends Command {
         = { ignoreCredits: false, ignoreNotified: false }) {
         this.inlineKeyboard = new AlertKeyboard(this.command.id, true);
         if (users.db.find({ id: id }).value().notifyAlerts) {
-            const messages = this.check(id, { ignoreCredits, ignoreNotified });
+            const messages = this.check(id, { ignoreCredits, ignoreNotified }).map(check => check.message);
             if (messages.length > 0) {
                 telegramFunction(messages.reduce((str, msg) => str += msg + "\n", ""), this.telegraf);
             } else if (ignoreNotified) {

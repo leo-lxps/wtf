@@ -13,12 +13,12 @@ export class Missions extends Command {
         return state.missionTypes;
     }
 
-    get message() {
+    message() {
         return new Promise(res => this.translate(res));
     }
 
     async execute(telegramFunction) {
-        telegramFunction(await this.message, this.telegraf);
+        telegramFunction(await this.message(), this.telegraf);
     }
 
     get missions() {

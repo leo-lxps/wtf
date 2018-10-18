@@ -8,7 +8,7 @@ export class Updates extends Command {
         super(command, new FullKeyboard(command.id, [["trader", "updates"]]));
     }
 
-    get message() {
+    message() {
         const lastUpdate = this.lastUpdate;
         this.keyboard = new FullKeyboard(this.command.id, [
             [{ text: "PATCHNOTES", url: lastUpdate.link }],
