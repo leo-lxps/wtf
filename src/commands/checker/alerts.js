@@ -1,10 +1,10 @@
 import { CheckCommand } from "../checkCommand";
 import { utils } from "../../util/utils";
-import { FullKeyboard } from "../../util/fullKeyboard";
+import { FullKeyboard, AlertKeyboard } from "../../util/fullKeyboard";
 
 export class Alerts extends CheckCommand {
     constructor(command) {
-        super(command, new FullKeyboard(command.id, [[{ text: "FILTER", callback_data: "filter.alerts" }],["invasions", "bounties", "events"]]))
+        super(command)
     }
 
     translateCheck(alert, index) {

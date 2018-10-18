@@ -17,6 +17,20 @@ export class Search {
         this.results = 20;
     }
 
+    slap(ctx) {
+        this.slapped = this.slapped + 1;
+        ctx.editMessageReplyMarkup({
+            inline_keyboard: [
+                [
+                    {
+                        text: "👋 " + this.slapped,
+                        callback_data: "slap"
+                    }
+                ]
+            ]
+        })
+    }
+
     query(ctx, search, userId) {
         if (search == this.lastQuery) {
             this.queryCount++;
@@ -140,7 +154,7 @@ export class Search {
                     inline_keyboard: [
                         [
                             {
-                                text: "SLAP | 👋 " + this.slapped,
+                                text: "👋 " + this.slapped,
                                 callback_data: "slap"
                             }
                         ]
@@ -170,9 +184,9 @@ export class Search {
         }
         const slicedObj = inlineObjects.slice(offset, offset + this.results);
         ctx.answerInlineQuery(slicedObj, {
-                cache_time: 0,
-                next_offset: this.results
-            })
+            cache_time: 0,
+            next_offset: this.results
+        })
             .catch(err => {
                 ctx.answerInlineQuery([
                     {

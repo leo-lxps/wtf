@@ -114,10 +114,10 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
             break;
         case "add":
             items.add(args, userId);
+            items.execute(telegrafFunction, userId);
             break;
         case "remove":
             items.remove(args, userId);
-            break;
         case "items":
             items.execute(telegrafFunction, userId);
             break;
@@ -203,7 +203,7 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
             ctx.answerCbQuery("Get Baro Ki'Teer notifications!", true)
             break;
         case "slap":
-            search.slapped++;
+            search.slap(ctx);
             break;
         case "configure":
             dashboard.config(telegrafFunction, userId)

@@ -52,8 +52,8 @@ export class Dashboard extends Command {
 
         const items = this.getUserItems(id);
         const cmdKey = (cmd) => items.includes(cmd)
-            ? [cmd, { text: ">", callback_data: ">." + cmd }]
-            : [{ text: "<", callback_data: "<." + cmd },
+            ? [cmd, { text: "🡆", callback_data: ">." + cmd }]
+            : [{ text: "🡄", callback_data: "<." + cmd },
                 cmd];
 
         const extra = [[{ text: "CONFIGURE DASHBOARD", callback_data: "configure" }],

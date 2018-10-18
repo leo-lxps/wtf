@@ -1,13 +1,13 @@
 import { Command } from "./command";
-import { FullKeyboard } from "../util/fullKeyboard";
+import { FullKeyboard, AlertKeyboard } from "../util/fullKeyboard";
 import { items } from "./handler";
 import { users, notifications } from "../api";
 import { utils } from "../util/utils";
 
 
 export class CheckCommand extends Command {
-    constructor(command, keyboard) {
-        super(command, keyboard ? keyboard : new FullKeyboard(command.id, [["invasions", "bounties", "events"]]))
+    constructor(command) {
+        super(command, new AlertKeyboard(command.id))
     }
 
     get message() {
@@ -17,6 +17,7 @@ export class CheckCommand extends Command {
     }
 
     async execute(telegramFunction) {
+        this.inlineKeyboard = new AlertKeyboard(this.command.id, false);
         telegramFunction(await this.message, this.telegraf);
     }
 
@@ -79,6 +80,7 @@ export class CheckCommand extends Command {
 
     alert(telegramFunction, id, { ignoreCredits, ignoreNotified }
         = { ignoreCredits: false, ignoreNotified: false }) {
+        this.inlineKeyboard = new AlertKeyboard(this.command.id, true);
         if (users.db.find({ id: id }).value().notifyAlerts) {
             const messages = this.check(id, { ignoreCredits, ignoreNotified });
             if (messages.length > 0) {

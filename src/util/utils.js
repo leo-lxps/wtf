@@ -58,7 +58,11 @@ export const utils = {
     },
 
     title(msg) {
-        return "`┣━` " + utils.bold(msg.toUpperCase()) + " `━┫`\n";
+        return "`━┫` " + utils.bold(msg.toUpperCase()) + " `┣━`\n";
+    },
+
+    selected(msg) {
+        return "┤ " + msg + " ├";
     },
 
     isAssassination(mission) {

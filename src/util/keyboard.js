@@ -1,3 +1,4 @@
+import { utils } from './utils';
 
 const Extra = require('telegraf/extra')
 
@@ -25,7 +26,7 @@ export class Keyboard {
     }
 
     text(name) {
-        return name === this.selected ? "> " + name.toUpperCase() + " <" : name.toUpperCase();
+        return name === this.selected ? utils.selected(name.toUpperCase()) : name.toUpperCase();
     }
 
     inlineKey(id) {

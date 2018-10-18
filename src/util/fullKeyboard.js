@@ -1,8 +1,8 @@
 import { Keyboard } from "./keyboard";
 
 let layout = [["━━━┫ MENU ┣━━━"],
-    ["dashboard", "sortie", "alerts"],
-    ["infos", "settings", "search"]
+["dashboard", "sortie", "alerts"],
+["infos", "settings", "search"]
 ]
 
 export class FullKeyboard extends Keyboard {
@@ -14,5 +14,14 @@ export class FullKeyboard extends Keyboard {
 
     select(selected) {
         this.select = selected;
+    }
+}
+
+export class AlertKeyboard extends FullKeyboard {
+    constructor(selected, filtered) {
+        super(selected, [
+            [filtered ? { text: "ALL", callback_data: selected } : { text: "FILTER", callback_data: "filter." + selected }],
+            ["invasions", "bounties", "events"]]
+        );
     }
 }

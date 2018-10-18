@@ -64,8 +64,7 @@ export class Trader extends Command {
                 utils.italic("Arrives " +
                     moment(trader.activation).fromNow()) +
                 utils.bold("\nWill be at:\t\t") +
-                utils.code(trader.location) +
-                "\n";
+                utils.code(trader.location);
         }
         return message;
     }
