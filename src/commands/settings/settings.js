@@ -18,9 +18,9 @@ export class Settings extends Command {
         const on = (b) => b ? "⬤" : "◯";
         const off = (b) => !b ? "⬤" : "◯";
 
-        let itemsKeys = user.items.map((item, i) =>
+        let itemsKeys = user.items ? user.items.map((item, i) =>
             [{ text: item.toUpperCase(), callback_data: "remove." + i }]
-            , [])
+            , []) : []
 
         itemsKeys = [["━━━┫ REMOVE ITEMS ┣━━━"]].concat(itemsKeys.reduce((all, one, i) => {
             const ch = Math.floor(i / 2);
