@@ -43,6 +43,6 @@ Commands can be found and edited in [list.json](https://github.com/leo-lxps/wtf/
 
 ### inline search
 
-@BOT_NAME <query>
+@BOT_NAME [query]
     
  - [search](https://github.com/leo-lxps/wtf/blob/master/src/commands/search/search.js)
