@@ -46,7 +46,9 @@ export class Data {
         if (object.id && !object.is_bot) {
             const found = this.getById(object.id)
             if (!found) {
-                this.push(object)
+                let user = object;
+                user.items = [];
+                this.push(user)
             }
         } else {
             console.log(object, " has no id field")
