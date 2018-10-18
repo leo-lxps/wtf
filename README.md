@@ -12,4 +12,4 @@ warframe telegram bot
 
 Commands can be found and edited in [list.json](https://github.com/leo-lxps/wtf/blob/master/src/commands/list.json)
 
-- [sortie](https://github.com/leo-lxps/wtf/blob/master/src/sortie/sortie.js)
+- [sortie](https://github.com/leo-lxps/wtf/blob/master/src/commands/sortie/sortie.js)
