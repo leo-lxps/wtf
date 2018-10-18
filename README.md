@@ -40,3 +40,9 @@ Commands can be found and edited in [list.json](https://github.com/leo-lxps/wtf/
 #### settings
 
 - [settings](https://github.com/leo-lxps/wtf/blob/master/src/commands/settings/settings.js)
+
+### inline search
+
+@BOT_NAME <query>
+    
+ - [search](https://github.com/leo-lxps/wtf/blob/master/src/commands/search/search.js)
