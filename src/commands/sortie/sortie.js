@@ -35,7 +35,7 @@ export class Sortie extends Command {
     translateSortieMission(mission, boss, index) {
         return utils.bold(index + ". " +
             (utils.isAssassination(mission.missionType)
-                ? mission.missionType + " - " + boss.replace(/\b\w/g, l => l.toUpperCase()) + " [" + time.findTime(boss, true).string + "]"
+                ? mission.missionType + " - " + boss.replace(/\b\w/g, l => l.toUpperCase()) + " [" + times.findTime(boss, true).string + "]"
                 : mission.missionType) + " [" + times.findTime(mission.missionType).string + "]") + "\n" +
             utils.tab(6) + utils.code(mission.modifier.toUpperCase().split(":").join("\n" + utils.tab(3)));
     }
