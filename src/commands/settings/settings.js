@@ -9,9 +9,6 @@ export class Settings extends Command {
     }
 
     execute(telegramFunction, id) {
-        this.msg = this.title + "\n" +
-            utils.bold("REMOVE ITEMS: ") + utils.italic("Click on items to remove them from your Filter.\n\n") +
-            utils.bold("OPTIONS: ") + utils.italic("Change your notification settings!");
 
         const user = users.db.find({ id: id }).value();
 
@@ -22,11 +19,13 @@ export class Settings extends Command {
             [{ text: item.toUpperCase(), callback_data: "remove." + i }]
             , []) : []
 
-        itemsKeys = [[utils.menu("remove items")]].concat(itemsKeys.reduce((all, one, i) => {
-            const ch = Math.floor(i / 2);
-            all[ch] = [].concat((all[ch] || []), one);
-            return all
-        }, []))
+        if (itemsKeys.length > 0) {
+            itemsKeys = [[utils.menu("remove items")]].concat(itemsKeys.reduce((all, one, i) => {
+                const ch = Math.floor(i / 2);
+                all[ch] = [].concat((all[ch] || []), one);
+                return all
+            }, []))
+        }
 
 
         const toggles = [utils.menu("options")];
@@ -59,6 +58,12 @@ export class Settings extends Command {
         this.keyboard = new FullKeyboard(
             this.command.id, fullExtra
         );
+
+        this.msg = this.title + "\n" +
+            (itemsKeys.length > 0
+                ? utils.bold("REMOVE ITEMS: ") + utils.italic("Click on items to remove them from your Filter.\n\n")
+                : "") +
+            utils.bold("OPTIONS: ") + utils.italic("Change your notification settings!");
 
         telegramFunction(this.message(), this.telegraf);
     }
