@@ -42,29 +42,29 @@ export class Trader extends Command {
         let message = this.title + "\n"
         if (trader.active) {
             message +=
-                utils.italic("Leaves " +
-                    moment(trader.expiry).fromNow()) +
-                utils.bold("\nLocation:\t\t") +
+                utils.bold("Location: ") +
                 utils.code(trader.location) + "\n" +
                 trader.inventory.reduce(
                     (str, t) =>
                         (str +=
                             "\t\t\t-\t" +
                             utils.italic(t.item) +
-                            utils.code(" (" +
+                            utils.code(" [" +
                                 t.ducats +
-                                "d, " +
+                                "d + " +
                                 t.credits +
-                                "cr)\n")),
+                                "cr]\n")),
                     ""
-                );
+                ) + "\n" +
+                utils.italic("Leaves " +
+                    moment(trader.expiry).fromNow());
 
         } else {
             message +=
-                utils.italic("Arrives " +
-                    moment(trader.activation).fromNow()) +
                 utils.bold("\nWill be at:\t\t") +
-                utils.code(trader.location);
+                utils.code(trader.location) + "\n" +
+                utils.italic("Arrives " +
+                    moment(trader.activation).fromNow());
         }
         return message;
     }

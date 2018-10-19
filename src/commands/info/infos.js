@@ -21,7 +21,7 @@ export class Infos extends Command {
         return this.title + "\n" +
             this.cetusCircle + "\n" +
             this.earthCircle + "\n\n" +
-            this.constructionProgress + "\n\n" +
+            // this.constructionProgress + "\n\n" +
             this.serverReset
     }
 

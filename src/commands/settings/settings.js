@@ -20,7 +20,7 @@ export class Settings extends Command {
             , []) : []
 
         if (itemsKeys.length > 0) {
-            itemsKeys = [[utils.menu("remove items")]].concat(itemsKeys.reduce((all, one, i) => {
+            itemsKeys = [[utils.menu("remove")]].concat(itemsKeys.reduce((all, one, i) => {
                 const ch = Math.floor(i / 2);
                 all[ch] = [].concat((all[ch] || []), one);
                 return all

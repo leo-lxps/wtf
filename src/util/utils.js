@@ -62,11 +62,11 @@ export const utils = {
     },
 
     selected(msg) {
-        return "〈" + msg + "〉";
+        return "◄" + msg + "►";
     },
 
     menu(msg) {
-        return "┏━━━━━━┫ " + msg.toUpperCase() + " ┣━━━━━━┓"
+        return "┏━━━━━━━┫ " + msg.toUpperCase() + " ┣━━━━━━━┓"
     },
 
     isAssassination(mission) {
