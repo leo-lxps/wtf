@@ -74,7 +74,9 @@ export class Times extends Command {
                 });
                 telegrafFunction(message);
             } else {
-                console.log("Not a valid time: ", args)
+                telegrafFunction("Not a valid time format: \n" +
+                    utils.code(args.join(", ")) + utils.italic("\n\nUse this format: \n")
+                    + utils.code("/time < mm:ss >, < mm:ss >, < mm:ss >"));
             }
         } else {
             console.log("User with id: ", userId, " not an admin")
