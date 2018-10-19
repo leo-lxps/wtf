@@ -78,7 +78,7 @@ export class CheckCommand extends Command {
                     if (!savedIDS.includes(check.id)) {
                         check.rewards.forEach(reward => {
                             if (reward.includes(item)
-                                && !foundChecks.includes(check)) {
+                                && !this.hasId(foundChecks, check.id)) {
                                 foundChecks.push(check);
                             }
                         });
@@ -87,6 +87,17 @@ export class CheckCommand extends Command {
             });
         }
         return foundChecks;
+    }
+
+    hasId(arr, id) {
+        arr.forEach(i => {
+            console.log(i.id, id)
+            if (i.id == id) {
+
+                return true;
+            }
+        });
+        return false;
     }
 
     alert(telegramFunction, id, { ignoreCredits, ignoreNotified }

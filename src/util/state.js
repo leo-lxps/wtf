@@ -4,7 +4,7 @@ import { alerts, sortie, updates, invasions, events, bounties, trader } from '..
 
 export class State {
     constructor(base, platform, options = {
-        interval: 60000,
+        interval: 1000,
         intervalFixed: 600000
     }) {
         this.b = base;
@@ -69,6 +69,14 @@ export class State {
                 trader.ids.forEach(id => notifications.add({ id: id }));
             })
             .catch(err => {
+                console.log(err)
+                alerts.ids.forEach(id => notifications.add({ id: id }));
+                invasions.ids.forEach(id => notifications.add({ id: id }));
+                events.ids.forEach(id => notifications.add({ id: id }));
+                bounties.ids.forEach(id => notifications.add({ id: id }));
+                sortie.ids.forEach(id => notifications.add({ id: id }));
+                updates.ids.forEach(id => notifications.add({ id: id }));
+                trader.ids.forEach(id => notifications.add({ id: id }));
             })
     }
 

@@ -86,8 +86,19 @@ export class Events extends CheckCommand {
                 , "").toUpperCase())
     }
 
-    rewardsOfCheck(event) {
-        return event.jobs.reduce((rew, j) =>
-            rew.concat(j.rewardPool), [])
+    rewardsOfCheck(event, ignoreCredits) {
+        if (event.jobs) {
+            return event.jobs.reduce((rew, j) =>
+                rew.concat(j.rewardPool), [])
+        } else if (event.rewards) {
+            if (Array.isArray(event.rewards)) {
+                return event.rewards.reduce((rew, j) =>
+                    rew.concat(ignoreCredits
+                        ? j.itemString
+                        : j.asString), [])
+            }
+        }
+
+        return []
     }
 }
