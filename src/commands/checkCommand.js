@@ -39,7 +39,7 @@ export class CheckCommand extends Command {
                     ? this.translateCheck(check, index + 1) + "\n"
                     : ""
             , "");
-        if (msg) {
+        if (msg || !filtered) {
             return this.title + "\n" + msg;
         } else {
             return "";
@@ -95,9 +95,9 @@ export class CheckCommand extends Command {
         if (users.db.find({ id: id }).value().notifyAlerts) {
             const messages = this.check(id, { ignoreCredits, ignoreNotified }).map(check => check.message);
             if (messages.length > 0) {
-                telegramFunction(messages.reduce((str, msg) => str += msg + "\n", ""), this.telegraf);
+                telegramFunction(this.title + "\n" + messages.reduce((str, msg) => str += msg + "\n", ""), this.telegraf);
             } else if (ignoreNotified) {
-                telegramFunction(utils.bold("You have no " + this.id + " with current Filter."), this.telegraf);
+                telegramFunction(this.title + "\n" + utils.bold("You have no " + this.id + " with current Filter."), this.telegraf);
             }
         } else {
             telegramFunction(utils.bold("You have alerts turned off in Settings"), this.telegraf);
