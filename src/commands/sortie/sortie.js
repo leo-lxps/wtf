@@ -21,7 +21,12 @@ export class Sortie extends Command {
 
     translate(sortie) {
         const sortieSecs = sortie.variants.reduce((totalSecs, mission) =>
-            totalSecs += parseInt(times.findTime(mission.missionType).avgSecs)
+            totalSecs += parseInt(
+                utils.isAssassination(mission.missionType)
+                    ? (times.findTime(sortie.boss, true).string
+                        ? times.findTime(sortie.boss, true).avgSecs
+                        : times.findTime(mission.missionType).avgSecs)
+                    : times.findTime(mission.missionType).avgSecs)
             , 0);
         const minutes = Math.floor(sortieSecs / 60);
         const seconds = Math.floor(sortieSecs - minutes * 60);
@@ -29,14 +34,18 @@ export class Sortie extends Command {
             sortie.variants.reduce(
                 (str, mission, ind) => str += this.translateSortieMission(mission, sortie.boss, ind + 1) + "\n", "") +
             utils.tab(6) + utils.italic("Resets " + utils.fromNow(sortie.expiry)) + "\n\n" +
-            "Expected completion time: \n"+ utils.tab(12) + utils.bold((minutes + 3) + "m " + seconds + "s");
+            "Expected completion time: \n" + utils.tab(12) + utils.bold((minutes + 3) + "m " + seconds + "s");
     }
 
     translateSortieMission(mission, boss, index) {
-        return utils.bold(index + ". " +
+        return utils.bold(index + ". " + mission.missionType + " [" + times.findTime(mission.missionType).string + "]") +
             (utils.isAssassination(mission.missionType)
-                ? mission.missionType + " - " + boss.replace(/\b\w/g, l => l.toUpperCase()) + " [" + times.findTime(boss, true).string + "]"
-                : mission.missionType) + " [" + times.findTime(mission.missionType).string + "]") + "\n" +
+                ? " - " + boss.replace(/\b\w/g, l => l.toUpperCase()) +
+                (times.findTime(boss, true).string
+                    ? " [" + times.findTime(boss, true).string + "]"
+                    : "")
+                : "") +
+            "\n" +
             utils.tab(6) + utils.code(mission.modifier.toUpperCase().split(":").join("\n" + utils.tab(3)));
     }
 
