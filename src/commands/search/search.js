@@ -31,6 +31,40 @@ export class Search {
         })
     }
 
+    remove(item, ctx) {
+        ctx.editMessageReplyMarkup({
+            inline_keyboard: [
+                [
+                    {
+                        text: "ADD ITEM",
+                        callback_data: "addInline." + item
+                    },
+                    {
+                        text: "SEARCH NEW",
+                        switch_inline_query_current_chat: ""
+                    }
+                ]
+            ]
+        })
+    }
+
+    add(item, ctx) {
+        ctx.editMessageReplyMarkup({
+            inline_keyboard: [
+                [
+                    {
+                        text: "REMOVE ITEM",
+                        callback_data: "removeInline." + item
+                    },
+                    {
+                        text: "SEARCH NEW",
+                        switch_inline_query_current_chat: ""
+                    }
+                ]
+            ]
+        })
+    }
+
     query(ctx, search, userId) {
         if (search == this.lastQuery) {
             this.queryCount++;
@@ -72,7 +106,7 @@ export class Search {
                             [
                                 {
                                     text: "REMOVE ITEM",
-                                    callback_data: "remove." + item.name
+                                    callback_data: "removeInline." + item.name
                                 },
                                 {
                                     text: "SEARCH NEW",
@@ -86,8 +120,8 @@ export class Search {
                         inline_keyboard: [
                             [
                                 {
-                                    text: "ADD TO FILTER",
-                                    callback_data: "add." + item.name
+                                    text: "ADD ITEM",
+                                    callback_data: "addInline." + item.name
                                 },
                                 {
                                     text: "SEARCH NEW",

@@ -71,23 +71,25 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
     }
 
     if (command.includes(".")) {
+        const item = [command.split(".")[1]];
         if (command.split(".")[0] == "add") {
-            const item = [command.split(".")[1]];
             items.add(item, userId);
             command = "settings";
         } else if (command.split(".")[0] == "remove") {
-            const ind = [command.split(".")[1]];
-            const item = [items.get(userId)[ind]];
             items.remove(item, userId);
             command = "settings";
         }
-
+        if (command.split(".")[0] == "addInline") {
+            items.add(item, userId);
+            search.add(item, ctx);
+        } else if (command.split(".")[0] == "removeInline") {
+            items.remove(item, userId);
+            search.remove(item, ctx);
+        }
         if (command.split(".")[0] == "<") {
-            const item = command.split(".")[1];
             dashboard.addItem(userId, item)
             command = "configure";
         } else if (command.split(".")[0] == ">") {
-            const item = command.split(".")[1];
             dashboard.removeItem(userId, item)
             command = "configure";
         }

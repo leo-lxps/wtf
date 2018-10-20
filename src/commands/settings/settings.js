@@ -15,8 +15,8 @@ export class Settings extends Command {
         const on = (b) => b ? "⬤" : "◯";
         const off = (b) => !b ? "⬤" : "◯";
 
-        let itemsKeys = user.items ? user.items.map((item, i) =>
-            [{ text: item.toUpperCase(), callback_data: "remove." + i }]
+        let itemsKeys = user.items ? user.items.map(item =>
+            [{ text: item.toUpperCase(), callback_data: "remove." + item }]
             , []) : []
 
         if (itemsKeys.length > 0) {

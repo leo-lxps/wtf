@@ -91,9 +91,7 @@ export class CheckCommand extends Command {
 
     hasId(arr, id) {
         arr.forEach(i => {
-            console.log(i.id, id)
             if (i.id == id) {
-
                 return true;
             }
         });
