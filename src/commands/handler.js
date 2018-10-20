@@ -393,6 +393,6 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
 
 export function handleErr(err) {
   if (err.code != 400) {
-    console.log(err);
+    console.log("[HANDLE ERROR]: ", err);
   }
 }
