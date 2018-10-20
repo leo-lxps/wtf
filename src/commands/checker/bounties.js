@@ -44,12 +44,16 @@ export class Bounties extends CheckCommand {
       ) +
       "\n" +
       utils.code(
-        utils.tab(3) + "... " + job.rewardPool
-          ? job.rewardPool
-              .slice(-2)
-              .join(" | ")
-              .toUpperCase()
-          : "",
+        utils.tab(3) +
+          "... " +
+          (Array.isArray(job.rewardPool)
+            ? job.rewardPool
+                .slice(-2)
+                .join(" | ")
+                .toUpperCase()
+            : typeof job.rewardPool == "string"
+              ? job.rewardPool
+              : ""),
       )
     );
   }
