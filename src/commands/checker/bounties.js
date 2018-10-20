@@ -1,6 +1,5 @@
 import { CheckCommand } from "../checkCommand";
 import { utils } from "../../util/utils";
-import { FullKeyboard, AlertKeyboard } from "../../util/fullKeyboard";
 
 export class Bounties extends CheckCommand {
     constructor(command) {

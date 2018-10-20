@@ -1,6 +1,5 @@
 import { CheckCommand } from "../checkCommand";
 import { utils } from "../../util/utils";
-import { FullKeyboard, AlertKeyboard } from "../../util/fullKeyboard";
 
 export class Events extends CheckCommand {
     constructor(command) {
@@ -10,17 +9,16 @@ export class Events extends CheckCommand {
     translateCheck(e) {
         const noReward = "No reward";
         const desc = e =>
-            e.description
-                ? "*" +
-                e.description +
-                "*" +
-                (e.faction ? ": " + e.faction : "") +
+            utils.code("━┫ ") +
+            (e.description
+                ? utils.bold(e.description) +
+                (e.faction ? "\n" + utils.tab(12) + e.faction : "") +
                 "\n"
                 : e.tooltip
-                    ? "*" + e.tooltip.replace("Tool Tip", "") + "*\n"
+                    ? utils.bold(e.tooltip.replace("Tool Tip", "")) + "\n"
                     : e.faction
-                        ? "*" + e.faction + "*\n"
-                        : "*Unknown Event:*\n";
+                        ? "\n" + utils.tab(12) + e.faction + "\n"
+                        : utils.bold("Unknown Event\n"));
         const score = e =>
             e.scoreLocTag
                 ? e.scoreLocTag +
@@ -32,20 +30,21 @@ export class Events extends CheckCommand {
             e.rewards
                 ? Array.isArray(e.rewards)
                     ? e.rewards.length > 0
-                        ? e.rewards.reduce(
-                            (s, r) =>
-                                (s +=
-                                    typeof r == "string" || r instanceof String
-                                        ? r + " + "
-                                        : r.asString
-                                            ? r.asString
-                                            : r.itemString
-                                                ? r.itemsStr + r.credits
-                                                    ? " + " + r.credits + "cr"
-                                                    : ""
-                                                : noReward),
-                            "*Rewards*: \n\t\t\t\t\t\t`"
-                        ) + "`\n"
+                        ? utils.bold("Rewards: \n") + utils.code(utils.tab(6) + e.rewards.reduce(
+                            (s, r) => {
+                                if (typeof r == "string" || r instanceof String) {
+                                    s.push(r);
+                                } else {
+                                    if (r.asString) {
+                                        s.push(r.asString);
+                                    } else if (r.itemsStr) {
+                                        s.push(r.itemsStr);
+                                    } else {
+                                        s.push(noReward);
+                                    }
+                                }
+                                return s;
+                            }, []).map(s => s.toUpperCase()).join("\n" + utils.tab(6))) + "\n"
                         : e.jobs
                             ? e.jobs.length > 0
                                 ? e.jobs.reduce((str, e, i) =>
@@ -61,15 +60,18 @@ export class Events extends CheckCommand {
                             str += this.translateJob(e) + "\n", "")
                         : noReward
                     : noReward
-        const node = e => (e.node ? "_Battle on " + e.node + "_\n" : "");
-        const remain = e => (e.health ? "`" + e.health + "%` Remaining\n" : "");
+        const node = e => (e.node ? utils.italic("Battle on " + e.node) + "\n" : "");
+        const remain = e => (e.health ? " | " + utils.code(e.health + "%") + " Remaining\n" : "");
         return desc(e) +
+            utils.tab(6) +
             score(e) +
+            utils.tab(3) +
             rewards(e) +
-            node(e) + "\n" +
+            utils.tab(6) +
+            node(e) +
+            utils.tab(3) +
             utils.italic("Ends " + utils.fromNow(e.expiry)) +
-            " | " +
-            remain(e);
+            remain(e) + "\n";
 
     }
 

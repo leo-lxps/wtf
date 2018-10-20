@@ -7,6 +7,7 @@ import { utils } from "../../util/utils";
 export class Dashboard extends Command {
     constructor(command, commands, extra) {
         super(command, new FullKeyboard(command.id, extra));
+        this.defaultCommands = ["sortie", "trader", "infos"];
         this.commands = commands;
         this.separator = "`┣━━━━━━━━━━`";
     }
@@ -16,8 +17,8 @@ export class Dashboard extends Command {
         if (items) {
             return items;
         }
-        this.setUserItems(id, ["sortie", "trader", "infos"]);
-        return ["sortie", "trader", "infos"];
+        this.setUserItems(id, this.defaultCommands);
+        return this.defaultCommands;
     }
 
     setUserItems(id, items) {

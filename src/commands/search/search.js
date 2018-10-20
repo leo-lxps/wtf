@@ -253,6 +253,7 @@ export class Search {
             .split(",")
             .filter(q => q != "")
             .map(q => q.trim().toUpperCase());
+        console.log(queries)
         let types = [];
         let found = Array.from(items).filter(i => {
             if (!types.includes(i.category)) {
@@ -260,15 +261,28 @@ export class Search {
             }
             let b = false;
             queries.forEach(query => {
-                if (i.name.toUpperCase().includes(query.toUpperCase())) {
-                    if (i.name.charAt(0) != "/" && i.name != "[Ph]") {
-                        b = true;
-                    }
-                }
+                b = this.matchesQuery(i, query);
             });
             return b;
         });
         return found;
+    }
+
+    matchesQuery(item, query) {
+        const matchStr = [
+            item.name,
+            item.type,
+            item.description,
+            item.uniqueName,
+            item.category].join(" ");
+
+
+        if (matchStr.toUpperCase().includes(query.toUpperCase())) {
+            if (item.name.charAt(0) != "/" && !item.name.includes("[Ph]")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     translateItem(item) {
@@ -304,15 +318,16 @@ export class Search {
             : "";
 
         const drops = item.drops
-            ? item.drops
+            ? utils.bold("DROPS:\n") + item.drops
                 .splice(0, 5)
                 .reduce(
                     (str, d) =>
                         (str +=
-                            d.type +
-                            ": " +
-                            utils.code(d.location) +
+                            utils.bold(d.type) +
+                            ": \n" +
+                            utils.tab(6) + utils.code(d.location.toUpperCase()) +
                             "\n" +
+                            utils.tab(6) +
                             d.rarity +
                             " (" +
                             utils.italic(d.chance * 100) +
@@ -321,8 +336,9 @@ export class Search {
                 )
             : "";
 
-        return utils.title(item.name) + info + "\n" + drops;
+        return utils.title(item.name) + info + "\n\n" + drops;
     }
+
     translateWarframe(warframe) {
         let name = warframe.name ? utils.title(warframe.name) + "\n" : "";
         let description = warframe.description
@@ -453,7 +469,7 @@ export class Search {
                 ? line + utils.code(weapon.wallAttack) + "\t\t\t Wall\n"
                 : "");
         let damage = weapon.damageTypes
-            ? this.translateDamage(weapon.damageTypes)
+            ? "\n" + this.translateDamage(weapon.damageTypes) + "\n"
             : "";
         let wikiUrl =
             weapon.wikiaUrl && weapon.name
@@ -488,6 +504,8 @@ export class Search {
             type +
             utils.tab(3) +
             description +
+            trade +
+            vaulted + "\n" +
             AS +
             CC +
             CM +
@@ -497,8 +515,6 @@ export class Search {
             dps +
             MR +
             disposition +
-            trade +
-            vaulted +
             latestPatch +
             wikiUrl;
 

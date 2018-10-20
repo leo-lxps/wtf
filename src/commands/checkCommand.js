@@ -1,5 +1,5 @@
 import { Command } from "./command";
-import { FullKeyboard, AlertKeyboard } from "../util/fullKeyboard";
+import { AlertKeyboard } from "../util/fullKeyboard";
 import { items } from "./handler";
 import { users, notifications } from "../api";
 import { utils } from "../util/utils";

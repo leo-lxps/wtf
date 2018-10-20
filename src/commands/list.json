@@ -16,17 +16,7 @@
     {
         "id": "dashboard",
         "help": {
-            "description": "Shows Information",
-            "variants": [
-                "dashboard",
-                "dash",
-                "d",
-                "DASHBOARD",
-                "DASH",
-                "D",
-                "Dashboard",
-                "Dash"
-            ]
+            "description": "Shows Information"
         }
     },
     {
