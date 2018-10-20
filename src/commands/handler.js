@@ -82,7 +82,9 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
       ctx.answerCbQuery("Something went wrong! \nPlease try again");
       return;
     }
-    telegrafFunction("Something went wrong! \nPlease try again");
+    telegrafFunction("Something went wrong! \nPlease try again").catch(err =>
+      handleErr(err),
+    );
     return;
   }
 
@@ -386,5 +388,11 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
         ctx.answerCbQuery(command);
       }
       break;
+  }
+}
+
+export function handleErr(err) {
+  if (err.code != 400) {
+    console.log(err);
   }
 }

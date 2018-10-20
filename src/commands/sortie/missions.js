@@ -2,7 +2,7 @@ import { Command } from "../command";
 import { utils } from "../../util/utils";
 import { FullKeyboard } from "../../util/fullKeyboard";
 import { state } from "../../api";
-import { times } from "../handler";
+import { times, handleErr } from "../handler";
 
 export class Missions extends Command {
   constructor(command) {
@@ -17,8 +17,10 @@ export class Missions extends Command {
     return new Promise(res => this.translate(res));
   }
 
-  async execute(telegramFunction) {
-    telegramFunction(await this.message(), this.telegraf);
+  async execute(telegrafFunction) {
+    telegrafFunction(await this.message(), this.telegraf).catch(err =>
+      handleErr(err),
+    );
   }
 
   get missions() {

@@ -1,6 +1,6 @@
 import { utils } from "../../util/utils";
 import { FullKeyboard } from "../../util/fullKeyboard";
-import { times } from "../handler";
+import { times, handleErr } from "../handler";
 import { users, notifications } from "../../api";
 import { Command } from "../command";
 
@@ -20,8 +20,10 @@ export class Sortie extends Command {
     }
   }
 
-  async execute(telegramFunction) {
-    telegramFunction(await this.message(), this.telegraf);
+  async execute(telegrafFunction) {
+    telegrafFunction(await this.message(), this.telegraf).catch(err =>
+      handleErr(err),
+    );
   }
 
   translate(sortie) {

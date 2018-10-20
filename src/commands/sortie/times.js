@@ -2,6 +2,7 @@ import { utils } from "../../util/utils";
 import { times, users } from "../../api";
 import { Command } from "../command";
 import { FullKeyboard } from "../../util/fullKeyboard";
+import { handleErr } from "../handler";
 
 export class Times extends Command {
   constructor(command) {
@@ -98,14 +99,14 @@ export class Times extends Command {
             utils.code(t) +
             "\n\n";
         });
-        telegrafFunction(message);
+        telegrafFunction(message).catch(err => handleErr(err));
       } else {
         telegrafFunction(
           "Not a valid time format: \n" +
             utils.code(args.join(", ")) +
             utils.italic("\n\nUse this format: \n") +
             utils.code("/time < mm:ss >, < mm:ss >, < mm:ss >"),
-        );
+        ).catch(err => handleErr(err));
       }
     } else {
       console.log("User with id: ", userId, " not an admin");

@@ -1,6 +1,6 @@
 import { Command } from "./command";
 import { AlertKeyboard } from "../util/fullKeyboard";
-import { items } from "./handler";
+import { items, handleErr } from "./handler";
 import { users, notifications } from "../api";
 import { utils } from "../util/utils";
 
@@ -15,9 +15,11 @@ export class CheckCommand extends Command {
     }
   }
 
-  async execute(telegramFunction) {
+  async execute(telegrafFunction) {
     this.inlineKeyboard = new AlertKeyboard(this.command.id, false);
-    telegramFunction(await this.message(), this.telegraf);
+    telegrafFunction(await this.message(), this.telegraf).catch(err =>
+      handleErr(err),
+    );
   }
 
   get ids() {
@@ -100,7 +102,7 @@ export class CheckCommand extends Command {
   }
 
   alert(
-    telegramFunction,
+    telegrafFunction,
     id,
     { ignoreCredits, ignoreNotified } = {
       ignoreCredits: false,
@@ -113,25 +115,25 @@ export class CheckCommand extends Command {
         check => check.message,
       );
       if (messages.length > 0) {
-        telegramFunction(
+        telegrafFunction(
           this.title +
             "\n" +
             messages.reduce((str, msg) => (str += msg + "\n"), ""),
           this.telegraf,
-        );
+        ).catch(err => handleErr(err));
       } else if (ignoreNotified) {
-        telegramFunction(
+        telegrafFunction(
           this.title +
             "\n" +
             utils.bold("You have no " + this.id + " with current Filter."),
           this.telegraf,
-        );
+        ).catch(err => handleErr(err));
       }
     } else {
-      telegramFunction(
+      telegrafFunction(
         utils.bold("You have alerts turned off in Settings"),
         this.telegraf,
-      );
+      ).catch(err => handleErr(err));
     }
   }
 }

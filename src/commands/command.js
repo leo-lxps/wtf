@@ -1,5 +1,6 @@
 import { utils } from "../util/utils";
 import { state } from "../api";
+import { handleErr } from "./handler";
 
 export class Command {
   constructor(command, keyboard) {
@@ -46,8 +47,10 @@ export class Command {
   /**
    * execute command
    */
-  execute(telegramFunction) {
-    telegramFunction(this.message(), this.telegraf);
+  execute(telegrafFunction) {
+    telegrafFunction(this.message(), this.telegraf).catch(err =>
+      handleErr(err),
+    );
   }
 
   addToMsg(messagePart) {

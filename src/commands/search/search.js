@@ -254,7 +254,6 @@ export class Search {
       .split(",")
       .filter(q => q != "")
       .map(q => q.trim().toUpperCase());
-    console.log(queries);
     let types = [];
     let found = Array.from(items).filter(i => {
       if (!types.includes(i.category)) {

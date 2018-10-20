@@ -1,7 +1,7 @@
 import { Command } from "../command";
 import { FullKeyboard } from "../../util/fullKeyboard";
 import { users } from "../../api";
-import { getCmd } from "../handler";
+import { getCmd, handleErr } from "../handler";
 import { utils } from "../../util/utils";
 
 export class Dashboard extends Command {
@@ -96,6 +96,6 @@ export class Dashboard extends Command {
     telegrafFunction(
       this.title + "\n" + this.separator + this.message(id),
       this.telegraf,
-    );
+    ).catch(err => handleErr(err));
   }
 }

@@ -2,6 +2,7 @@ import { Command } from "../command";
 import { FullKeyboard } from "../../util/fullKeyboard";
 import { users } from "../../api";
 import { utils } from "../../util/utils";
+import { handleErr } from "../handler";
 
 export class Settings extends Command {
   constructor(command) {
@@ -14,7 +15,7 @@ export class Settings extends Command {
     );
   }
 
-  execute(telegramFunction, id) {
+  execute(telegrafFunction, id) {
     const user = users.db.find({ id: id }).value();
 
     const on = b => (b ? "⬤" : "◯");
@@ -92,6 +93,8 @@ export class Settings extends Command {
       utils.bold("OPTIONS: ") +
       utils.italic("Change your notification settings!");
 
-    telegramFunction(this.message(), this.telegraf);
+    telegrafFunction(this.message(), this.telegraf).catch(err =>
+      handleErr(err),
+    );
   }
 }

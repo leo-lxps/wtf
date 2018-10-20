@@ -2,6 +2,7 @@ import { Command } from "../command";
 import { FullKeyboard } from "../../util/fullKeyboard";
 import { users } from "../../api";
 import { utils } from "../../util/utils";
+import { handleErr } from "../handler";
 
 export class Items extends Command {
   constructor(command) {
@@ -55,8 +56,10 @@ export class Items extends Command {
     }
   }
 
-  execute(telegramFunction, userId) {
-    telegramFunction(this.genMessage(userId), this.telegraf);
+  execute(telegrafFunction, userId) {
+    telegrafFunction(this.genMessage(userId), this.telegraf).catch(err =>
+      handleErr(err),
+    );
   }
 
   genMessage(userId) {
