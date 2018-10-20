@@ -1,7 +1,4 @@
-import { Command } from "../command";
-import { FullKeyboard } from "../../util/fullKeyboard";
 import WfItems from "warframe-items";
-import { users } from "../../api";
 import { items } from "../handler";
 import { utils } from "../../util/utils";
 
@@ -216,10 +213,9 @@ export class Search {
         },
       });
     }
-    const slicedObj = inlineObjects.slice(offset, offset + this.results);
     ctx
-      .answerInlineQuery(slicedObj, {
-        cache_time: 0,
+      .answerInlineQuery(inlineObjects.slice(offset, offset + this.results), {
+        cache_time: 100,
         next_offset: this.results,
       })
       .catch(err => {
