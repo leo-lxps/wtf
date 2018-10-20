@@ -6,7 +6,8 @@ import { State } from './util/state.js';
 import { handleCmd } from './commands/handler';
 import { Search } from './commands/search/search.js';
 
-export const state = new State("https://api.warframestat.us", "/pc");
+export const state = new State("https://api.warframestat.us", "/pc",
+    { interval: 60000, intervalFixed: 600000 });
 export const users = new Data("users");
 export const times = new Data("times");
 export const notifications = new Data("notifications");

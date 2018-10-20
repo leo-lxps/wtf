@@ -4,7 +4,7 @@ import { alerts, sortie, updates, invasions, events, bounties, trader } from '..
 
 export class State {
     constructor(base, platform, options = {
-        interval: 1000,
+        interval: 60000,
         intervalFixed: 600000
     }) {
         this.b = base;
@@ -69,7 +69,7 @@ export class State {
                 trader.ids.forEach(id => notifications.add({ id: id }));
             })
             .catch(err => {
-                console.log(err)
+                console.log("[STATE FETCHING ERROR]: ", err)
                 alerts.ids.forEach(id => notifications.add({ id: id }));
                 invasions.ids.forEach(id => notifications.add({ id: id }));
                 events.ids.forEach(id => notifications.add({ id: id }));
