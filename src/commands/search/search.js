@@ -1,7 +1,9 @@
 import WfItems from "warframe-items";
+import WfPcQuery from "warframe-nexus-query";
 import { items } from "../handler";
 import { utils } from "../../util/utils";
 
+const wfPcQuery = new WfPcQuery();
 const wfItems = new WfItems();
 
 export class Search {
@@ -69,150 +71,365 @@ export class Search {
       this.queryCount = 0;
     }
     this.lastQuery = search;
-    const offset = parseInt(ctx.inlineQuery.offset || 0) * this.queryCount;
 
     let inlineObjects = [];
     let inlinePhotos = [];
 
-    if (search == "") {
-      inlineObjects.push({
-        type: "article",
-        id: "searchitem",
-        title: "Start typing to search!",
-        description: "Search Warframes, weapons, drops, items and more...\n",
-        input_message_content: {
-          message_text: "Mission Failed, We'll Get 'Em Next Time",
-          parse_mode: "Markdown",
-        },
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: "GAME OVER",
-                switch_inline_query_current_chat: "",
-              },
-            ],
-          ],
-        },
-      });
+    if (search.charAt(0) == "/") {
+      const command = search.substring(1).replace(/ .*/, "");
+      const query = search
+        .replace("/" + command, "")
+        .trim()
+        .toUpperCase();
+
+      if (command.toUpperCase() == "PC") {
+        if (query) {
+          // wfPcQuery
+          //   .priceCheckQueryAttachment(query)
+          //   .then(att => console.log(att));
+          wfPcQuery.priceCheckQuery(query).then(res => {
+            res.forEach((item, i) => {
+              if (item.name) {
+                // Component
+                const inKey = item => {
+                  if (items.get(userId).includes(item.name.toUpperCase())) {
+                    return {
+                      inline_keyboard: [
+                        [
+                          {
+                            text: "REMOVE ITEM",
+                            callback_data: "removeInline." + item.name,
+                          },
+                          {
+                            text: "SEARCH NEW",
+                            switch_inline_query_current_chat: "",
+                          },
+                        ],
+                        [
+                          {
+                            text: "MARKET",
+                            url: item.url,
+                          },
+                        ],
+                      ],
+                    };
+                  } else {
+                    return {
+                      inline_keyboard: [
+                        [
+                          {
+                            text: "ADD ITEM",
+                            callback_data: "addInline." + item.name,
+                          },
+                          {
+                            text: "SEARCH NEW",
+                            switch_inline_query_current_chat: "",
+                          },
+                        ],
+                        [
+                          {
+                            text: "MARKET",
+                            url: item.url,
+                          },
+                        ],
+                      ],
+                    };
+                  }
+                };
+
+                const desc =
+                  "Price: " +
+                  item.prices.soldPrice +
+                  "p" +
+                  (item.ducats > 0 ? " | Ducats: " + item.ducats + "d" : "");
+
+                const msg =
+                  utils.title(item.name) +
+                  "\n" +
+                  utils.tab(6) +
+                  utils.italic(item.description) +
+                  "\n\n" +
+                  (item.ducats > 0
+                    ? "Ducats: " + utils.code(item.ducats) + "\n"
+                    : "") +
+                  (item.prices.soldPrice > 0
+                    ? "Sold " +
+                      utils.code(item.prices.soldCount) +
+                      " " +
+                      utils.bold(item.name) +
+                      " for an average of " +
+                      utils.code(item.prices.soldPrice) +
+                      "p\n"
+                    : "") +
+                  (item.prices.maximum > 0
+                    ? "Maximum sold price: " +
+                      utils.code(item.prices.maximum) +
+                      "p\n"
+                    : "") +
+                  (item.prices.minimum > 0
+                    ? "Minimal sold price: " +
+                      utils.code(item.prices.minimum) +
+                      "p\n"
+                    : "");
+
+                inlineObjects.push({
+                  type: "article",
+                  id: item.name + i,
+                  title: item.name,
+                  description: desc,
+                  input_message_content: {
+                    message_text: msg,
+                    parse_mode: "Markdown",
+                  },
+                  reply_markup: inKey(item),
+                });
+              } else if (item.title) {
+                // Item
+
+                const inKey = item => {
+                  if (items.get(userId).includes(item.title.toUpperCase())) {
+                    return {
+                      inline_keyboard: [
+                        [
+                          {
+                            text: "REMOVE ITEM",
+                            callback_data: "removeInline." + item.title,
+                          },
+                          {
+                            text: "SEARCH NEW",
+                            switch_inline_query_current_chat: "",
+                          },
+                        ],
+                        [
+                          {
+                            text: "MARKET",
+                            url: item.url,
+                          },
+                        ],
+                      ],
+                    };
+                  } else {
+                    return {
+                      inline_keyboard: [
+                        [
+                          {
+                            text: "ADD ITEM",
+                            callback_data: "addInline." + item.title,
+                          },
+                          {
+                            text: "SEARCH NEW",
+                            switch_inline_query_current_chat: "",
+                          },
+                        ],
+                        [
+                          {
+                            text: "MARKET",
+                            url: item.url,
+                          },
+                        ],
+                      ],
+                    };
+                  }
+                };
+
+                const desc =
+                  "Demand: " +
+                  item.demand.hasValue +
+                  "p | Supply: " +
+                  item.supply.hasValue +
+                  "p";
+
+                const msg =
+                  utils.title(item.title) +
+                  "\n" +
+                  utils.tab(6) +
+                  utils.italic(item.type) +
+                  "\n\n" +
+                  (item.demand.hasValue > 0
+                    ? "Demand " +
+                      utils.code(item.demand.count) +
+                      " " +
+                      utils.bold(item.title) +
+                      " for an average of " +
+                      utils.code(item.demand.hasValue) +
+                      "p\n"
+                    : "") +
+                  (item.supply.hasValue > 0
+                    ? "Supply " +
+                      utils.code(item.supply.count) +
+                      " " +
+                      utils.bold(item.title) +
+                      " for an average of " +
+                      utils.code(item.supply.hasValue) +
+                      "p\n"
+                    : "");
+
+                inlineObjects.push({
+                  type: "article",
+                  id: item.title + i,
+                  title: item.title,
+                  description: desc,
+                  input_message_content: {
+                    message_text: msg,
+                    parse_mode: "Markdown",
+                  },
+                  reply_markup: inKey(item),
+                });
+              }
+            });
+
+            this.answerQuery(ctx, inlineObjects);
+          });
+        }
+      }
     } else {
-      const inKey = item => {
-        if (items.get(userId).includes(item.name.toUpperCase())) {
-          return {
+      if (search == "") {
+        inlineObjects.push({
+          type: "article",
+          id: "searchitem",
+          title: "Start typing to search! Or use /pc <item> to price check.",
+          description: "Search Warframes, weapons, drops, items and more...\n",
+          input_message_content: {
+            message_text: "Mission Failed, We'll Get 'Em Next Time",
+            parse_mode: "Markdown",
+          },
+          reply_markup: {
             inline_keyboard: [
               [
                 {
-                  text: "REMOVE ITEM",
-                  callback_data: "removeInline." + item.name,
-                },
-                {
-                  text: "SEARCH NEW",
+                  text: "GAME OVER",
                   switch_inline_query_current_chat: "",
                 },
               ],
             ],
-          };
-        } else {
-          return {
+          },
+        });
+      } else {
+        const inKey = item => {
+          if (items.get(userId).includes(item.name.toUpperCase())) {
+            return {
+              inline_keyboard: [
+                [
+                  {
+                    text: "REMOVE ITEM",
+                    callback_data: "removeInline." + item.name,
+                  },
+                  {
+                    text: "SEARCH NEW",
+                    switch_inline_query_current_chat: "",
+                  },
+                ],
+              ],
+            };
+          } else {
+            return {
+              inline_keyboard: [
+                [
+                  {
+                    text: "ADD ITEM",
+                    callback_data: "addInline." + item.name,
+                  },
+                  {
+                    text: "SEARCH NEW",
+                    switch_inline_query_current_chat: "",
+                  },
+                ],
+              ],
+            };
+          }
+        };
+        this.getItems(search).forEach((item, i) => {
+          if (item.wikiaThumbnail) {
+            inlinePhotos.push({
+              type: "photo",
+              id: "p" + i,
+              photo_url: item.wikiaThumbnail,
+              thumb_url: item.wikiaThumbnail,
+              title: item.name,
+              description: item.type,
+              input_message_content: {
+                message_text: this.translateItem(item),
+                parse_mode: "Markdown",
+              },
+              reply_markup: inKey(item),
+            });
+          } else {
+            const description = item.description
+              ? item.description
+                  .replace(/\<([^>]+)\>/g, "")
+                  .replace(/[*`_]/g, "")
+              : "";
+
+            inlineObjects.push({
+              type: "article",
+              id: "a" + i,
+              title: item.name,
+              description: description,
+              input_message_content: {
+                message_text: this.translateItem(item),
+                parse_mode: "Markdown",
+              },
+              reply_markup: inKey(item),
+            });
+          }
+        });
+      }
+
+      inlineObjects = inlinePhotos.concat(inlineObjects);
+
+      if (inlineObjects.length < 1) {
+        const gifs = [
+          "https://i.imgur.com/X8Z1NwC.gif",
+          "https://i.imgur.com/ARwMmsw.gif",
+          "https://i.imgur.com/WjfSkSS.gif",
+          "https://i.imgur.com/HxJXv3F.gif",
+        ];
+        const randGif = gifs[Math.floor(Math.random() * gifs.length)];
+        inlineObjects.push({
+          type: "gif",
+          id: "valkyr",
+          gif_url: randGif,
+          thumb_url: randGif,
+          title: "ASS",
+          description: "NOICE",
+          reply_markup: {
             inline_keyboard: [
               [
                 {
-                  text: "ADD ITEM",
-                  callback_data: "addInline." + item.name,
+                  text: "👋 " + this.slapped,
+                  callback_data: "slap",
                 },
+              ],
+            ],
+          },
+        });
+        inlineObjects.push({
+          type: "article",
+          id: "noitem",
+          title: "No items found!",
+          description: "Try another search query.",
+          input_message_content: {
+            message_text: "Try another search query.",
+            parse_mode: "Markdown",
+          },
+          reply_markup: {
+            inline_keyboard: [
+              [
                 {
-                  text: "SEARCH NEW",
+                  text: "SEARCH",
                   switch_inline_query_current_chat: "",
                 },
               ],
             ],
-          };
-        }
-      };
-      this.getItems(search).forEach((item, i) => {
-        if (item.wikiaThumbnail) {
-          inlinePhotos.push({
-            type: "photo",
-            id: "p" + i,
-            photo_url: item.wikiaThumbnail,
-            thumb_url: item.wikiaThumbnail,
-            title: item.name,
-            description: item.type,
-            input_message_content: {
-              message_text: this.translateItem(item),
-              parse_mode: "Markdown",
-            },
-            reply_markup: inKey(item),
-          });
-        } else {
-          const description = item.description
-            ? item.description.replace(/\<([^>]+)\>/g, "").replace(/[*`_]/g, "")
-            : "";
-
-          inlineObjects.push({
-            type: "article",
-            id: "a" + i,
-            title: item.name,
-            description: description,
-            input_message_content: {
-              message_text: this.translateItem(item),
-              parse_mode: "Markdown",
-            },
-            reply_markup: inKey(item),
-          });
-        }
-      });
+          },
+        });
+      }
+      this.answerQuery(ctx, inlineObjects);
     }
+  }
 
-    inlineObjects = inlinePhotos.concat(inlineObjects);
-
-    if (inlineObjects.length < 1) {
-      const gifs = [
-        "https://i.imgur.com/X8Z1NwC.gif",
-        "https://i.imgur.com/ARwMmsw.gif",
-        "https://i.imgur.com/WjfSkSS.gif",
-        "https://i.imgur.com/HxJXv3F.gif",
-      ];
-      const randGif = gifs[Math.floor(Math.random() * gifs.length)];
-      inlineObjects.push({
-        type: "gif",
-        id: "valkyr",
-        gif_url: randGif,
-        thumb_url: randGif,
-        title: "ASS",
-        description: "NOICE",
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: "👋 " + this.slapped,
-                callback_data: "slap",
-              },
-            ],
-          ],
-        },
-      });
-      inlineObjects.push({
-        type: "article",
-        id: "noitem",
-        title: "No items found!",
-        description: "Try another search query.",
-        input_message_content: {
-          message_text: "Try another search query.",
-          parse_mode: "Markdown",
-        },
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: "SEARCH",
-                switch_inline_query_current_chat: "",
-              },
-            ],
-          ],
-        },
-      });
-    }
+  answerQuery(ctx, inlineObjects) {
+    const offset = parseInt(ctx.inlineQuery.offset || 0) * this.queryCount;
     ctx
       .answerInlineQuery(inlineObjects.slice(offset, offset + this.results), {
         cache_time: 100,

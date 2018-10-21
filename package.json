@@ -18,6 +18,7 @@
     "telegraf": "^3.24.1",
     "telegraf-command-parts": "^1.0.3",
     "warframe-items": "^1.95.0",
+    "warframe-nexus-query": "^1.1.1",
     "warframe-updates": "^1.0.6"
   },
   "devDependencies": {
