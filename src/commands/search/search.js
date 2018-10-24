@@ -287,8 +287,10 @@ export class Search {
         inlineObjects.push({
           type: "article",
           id: "searchitem",
-          title: "Start typing to search! Or use /pc <item> to price check.",
-          description: "Search Warframes, weapons, drops, items and more...\n",
+          title:
+            "Start typing to search! Or /pc for price check.",
+          description:
+            "Search Warframes, weapons, drops, items and more...\n",
           input_message_content: {
             message_text: "Mission Failed, We'll Get 'Em Next Time",
             parse_mode: "Markdown",

@@ -15,6 +15,10 @@ export class CheckCommand extends Command {
     }
   }
 
+  count(filtered) {
+    return "(" + filtered + "/" + this.json.length + ")\n";
+  }
+
   async execute(telegrafFunction) {
     this.inlineKeyboard = new AlertKeyboard(this.command.id, false);
     telegrafFunction(await this.message(), this.telegraf).catch(err =>
@@ -43,7 +47,7 @@ export class CheckCommand extends Command {
       "",
     );
     if (msg || !filtered) {
-      return this.title + "\n" + msg;
+      return this.title + this.count(cmds.length) +"\n" + msg;
     } else {
       return "";
     }
@@ -74,6 +78,7 @@ export class CheckCommand extends Command {
 
   check(id, { ignoreCredits, ignoreNotified }) {
     let foundChecks = [];
+    let usedIds = [];
     if (this.json) {
       const items_ = items.get(id);
       const savedIDS = ignoreNotified ? [] : notifications.ids;
@@ -82,7 +87,10 @@ export class CheckCommand extends Command {
           if (!savedIDS.includes(check.id)) {
             check.rewards.forEach(reward => {
               if (reward.includes(item) && !this.hasId(foundChecks, check.id)) {
-                foundChecks.push(check);
+                if (!usedIds.includes(check.id)) {
+                  foundChecks.push(check);
+                }
+                usedIds.push(check.id);
               }
             });
           }
@@ -109,31 +117,35 @@ export class CheckCommand extends Command {
       ignoreNotified: false,
     },
   ) {
-    this.inlineKeyboard = new AlertKeyboard(this.command.id, true);
-    if (users.db.find({ id: id }).value().notifyAlerts) {
-      const messages = this.check(id, { ignoreCredits, ignoreNotified }).map(
-        check => check.message,
-      );
-      if (messages.length > 0) {
+    if (telegrafFunction) {
+      this.inlineKeyboard = new AlertKeyboard(this.command.id, true);
+      if (users.db.find({ id: id }).value().notifyAlerts) {
+        const messages = this.check(id, { ignoreCredits, ignoreNotified }).map(
+          check => check.message,
+        );
+        if (messages.length > 0) {
+          telegrafFunction(
+            this.title +
+              this.count(messages.length) +
+              "\n" +
+              messages.reduce((str, msg) => (str += msg + "\n"), "") +
+              (this.extra ? this.extra : ""),
+            this.telegraf,
+          ).catch(err => handleErr(err));
+        } else if (ignoreNotified) {
+          telegrafFunction(
+            this.title +
+              "\n" +
+              utils.bold("You have no " + this.id + " with current Filter."),
+            this.telegraf,
+          ).catch(err => handleErr(err));
+        }
+      } else {
         telegrafFunction(
-          this.title +
-            "\n" +
-            messages.reduce((str, msg) => (str += msg + "\n"), ""),
-          this.telegraf,
-        ).catch(err => handleErr(err));
-      } else if (ignoreNotified) {
-        telegrafFunction(
-          this.title +
-            "\n" +
-            utils.bold("You have no " + this.id + " with current Filter."),
+          utils.bold("You have alerts turned off in Settings"),
           this.telegraf,
         ).catch(err => handleErr(err));
       }
-    } else {
-      telegrafFunction(
-        utils.bold("You have alerts turned off in Settings"),
-        this.telegraf,
-      ).catch(err => handleErr(err));
     }
   }
 }

@@ -40,9 +40,8 @@ export class State {
 
         // Check for new alerts
         users.data.filter(u => u.notifyAlerts).forEach(user => {
-          const telegrafFunction = (msg, keyboard) => {
+          const telegrafFunction = (msg, keyboard) =>
             bot.telegram.sendMessage(user.id, msg, keyboard);
-          };
           alerts.alert(telegrafFunction, user.id);
           invasions.alert(telegrafFunction, user.id);
           events.alert(telegrafFunction, user.id);
@@ -50,25 +49,22 @@ export class State {
         });
         // Check for new sortie
         users.data.filter(u => u.notifySortie).forEach(user => {
-          const telegrafFunction = (msg, keyboard) => {
+          const telegrafFunction = (msg, keyboard) =>
             bot.telegram.sendMessage(user.id, msg, keyboard);
-          };
           sortie.alert(telegrafFunction);
         });
 
         // Check for new update
         users.data.filter(u => u.notifyUpdates).forEach(user => {
-          const telegrafFunction = (msg, keyboard) => {
+          const telegrafFunction = (msg, keyboard) =>
             bot.telegram.sendMessage(user.id, msg, keyboard);
-          };
           updates.alert(telegrafFunction, user.id);
         });
 
         // Check for new trader
         users.data.filter(u => u.notifyUpdates).forEach(user => {
-          const telegrafFunction = (msg, keyboard) => {
+          const telegrafFunction = (msg, keyboard) =>
             bot.telegram.sendMessage(user.id, msg, keyboard);
-          };
           trader.alert(telegrafFunction, user.id);
         });
 

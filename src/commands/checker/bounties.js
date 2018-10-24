@@ -1,35 +1,87 @@
 import { CheckCommand } from "../checkCommand";
 import { utils } from "../../util/utils";
+import { AlertKeyboard } from "../../util/fullKeyboard";
+import { users } from "../../api";
 
 export class Bounties extends CheckCommand {
   constructor(command) {
     super(command);
   }
 
-  translateCheck(bounties) {
-    if (bounties.syndicate == "Ostrons") {
-      return (
-        utils.bold(bounties.syndicate) +
-        "\n" +
-        bounties.jobs.reduce(
-          (str, job) => (str += this.translateJob(job) + "\n"),
-          "",
-        ) +
-        "\n" +
-        utils.italic("Expires " + utils.fromNow(bounties.expiry))
+  rewards(ignoreCredits) {
+    if (this.json) {
+      return this.bounties.jobs.reduce(
+        (rewards, check) =>
+          rewards.concat({
+            id: check.id,
+            check: check,
+            rewards: this.parseItems(this.rewardsOfCheck(check, ignoreCredits)),
+            message: this.translateCheck(check, true),
+          }),
+        [],
       );
     }
-    return "";
   }
 
-  rewardsOfCheck(bounties) {
-    if (bounties.syndicate == "Ostrons") {
-      return bounties.jobs.reduce((res, j) => res.concat(j.rewardPool), []);
+  get extra() {
+    return (
+      "\n" + utils.italic("Expires " + utils.fromNow(this.bounties.expiry))
+    );
+  }
+
+  get ids() {
+    if (this.json) {
+      return this.bounties.jobs.map(c => c.id);
     }
-    return [];
   }
 
-  translateJob(job) {
+  get bounties() {
+    return this.json.find(s => s.syndicate == "Ostrons");
+  }
+
+  translateCheck(job, { allRewards, filtered } = {}) {
+    return this.translateJob(job, allRewards);
+  }
+
+  count(filtered) {
+    return "(" + filtered + "/" + this.bounties.jobs.length + ")\n";
+  }
+
+  translate(checks, filtered, id) {
+    const cmds = filtered
+      ? this.check(id, { ignoreCredits: false, ignoreNotified: true }).map(
+          c => c.check,
+        )
+      : checks.find(s => s.syndicate == "Ostrons").jobs;
+
+    const msg = cmds.reduce(
+      (str, check) =>
+        (str += this.translateCheck(check, { filtered })
+          ? this.translateCheck(check, { filtered }) + "\n"
+          : ""),
+      "",
+    );
+    if (msg || !filtered) {
+      return (
+        this.title +
+        this.count(cmds.length) +
+        "\n" +
+        msg +
+        "\n" +
+        utils.italic("Expires " + utils.fromNow(this.bounties.expiry))
+      );
+    } else {
+      return "";
+    }
+  }
+
+  rewardsOfCheck(job, ignoreCredits) {
+    return job.rewardPool.filter(
+      r => (ignoreCredits ? !r.includes("Credits Cache") : true),
+    );
+  }
+
+  translateJob(job, allRewards = true) {
     return (
       utils.code("━┫ ") +
       utils.bold(
@@ -45,12 +97,14 @@ export class Bounties extends CheckCommand {
       "\n" +
       utils.code(
         utils.tab(3) +
-          "... " +
           (Array.isArray(job.rewardPool)
-            ? job.rewardPool
-                .slice(-2)
-                .join(" | ")
-                .toUpperCase()
+            ? allRewards
+              ? job.rewardPool.join(" | ").toUpperCase()
+              : "..." +
+                job.rewardPool
+                  .slice(-2)
+                  .join(" | ")
+                  .toUpperCase()
             : typeof job.rewardPool == "string"
               ? job.rewardPool
               : ""),
