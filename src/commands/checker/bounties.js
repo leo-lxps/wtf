@@ -30,7 +30,7 @@ export class Bounties extends CheckCommand {
   }
 
   get ids() {
-    if (this.json) {
+    if (this.bounties) {
       return this.bounties.jobs.map(c => c.id);
     }
   }
