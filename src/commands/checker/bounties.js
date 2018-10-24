@@ -76,9 +76,12 @@ export class Bounties extends CheckCommand {
   }
 
   rewardsOfCheck(job, ignoreCredits) {
-    return job.rewardPool.filter(
-      r => (ignoreCredits ? !r.includes("Credits Cache") : true),
-    );
+    if (Array.isArray(job.rewardPool)) {
+      return job.rewardPool.filter(
+        r => (ignoreCredits ? !r.includes("Credits Cache") : true),
+      );
+    }
+    return [];
   }
 
   translateJob(job, allRewards = true) {
