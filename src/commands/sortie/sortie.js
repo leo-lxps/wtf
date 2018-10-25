@@ -72,7 +72,7 @@ export class Sortie extends Command {
         ? " - " +
           boss.replace(/\b\w/g, l => l.toUpperCase()) +
           (times.findTime(boss, true).string
-            ? " [" + times.findTime(boss, true).string + "]"
+            ? utils.italic(" [" + times.findTime(boss, true).string + "]")
             : "")
         : "") +
       "\n" +
