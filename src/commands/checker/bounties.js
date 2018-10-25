@@ -33,6 +33,7 @@ export class Bounties extends CheckCommand {
     if (this.bounties) {
       return this.bounties.jobs.map(c => c.id);
     }
+    return [];
   }
 
   get bounties() {

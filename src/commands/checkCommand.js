@@ -30,6 +30,7 @@ export class CheckCommand extends Command {
     if (this.json) {
       return this.json.map(c => c.id);
     }
+    return [];
   }
 
   translate(checks, filtered, id) {
@@ -47,7 +48,7 @@ export class CheckCommand extends Command {
       "",
     );
     if (msg || !filtered) {
-      return this.title + this.count(cmds.length) +"\n" + msg;
+      return this.title + this.count(cmds.length) + "\n" + msg;
     } else {
       return "";
     }

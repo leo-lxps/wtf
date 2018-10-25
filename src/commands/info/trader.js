@@ -38,6 +38,7 @@ export class Trader extends Command {
     if (this.json) {
       return [this.json.id];
     }
+    return [];
   }
 
   notify(id, boolean) {

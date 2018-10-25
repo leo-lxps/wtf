@@ -10,21 +10,25 @@ export class Updates extends Command {
 
   message() {
     const lastUpdate = this.lastUpdate;
-    this.keyboard = new FullKeyboard(this.command.id, [
-      [{ text: "PATCHNOTES", url: lastUpdate.link }],
-      ["trader", "updates"],
-    ]);
-    return (
-      this.title +
-      "\n" +
-      utils.bold(lastUpdate.message) +
-      "[⠀](" +
-      lastUpdate.imageLink +
-      ")" +
-      "\n" +
-      utils.tab(6) +
-      utils.italic("Released " + utils.fromNow(lastUpdate.date))
-    );
+    if (lastUpdate) {
+      this.keyboard = new FullKeyboard(this.command.id, [
+        [{ text: "PATCHNOTES", url: lastUpdate.link }],
+        ["trader", "updates"],
+      ]);
+      return (
+        this.title +
+        "\n" +
+        utils.bold(lastUpdate.message) +
+        "[⠀](" +
+        lastUpdate.imageLink +
+        ")" +
+        "\n" +
+        utils.tab(6) +
+        utils.italic("Released " + utils.fromNow(lastUpdate.date))
+      );
+    } else {
+      return "";
+    }
   }
 
   get lastUpdate() {
@@ -48,6 +52,7 @@ export class Updates extends Command {
     if (this.json) {
       return this.json.filter(n => n.update).map(n => n.id);
     }
+    return [];
   }
 
   notify(id, boolean) {
