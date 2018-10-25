@@ -7,6 +7,8 @@ import { utils } from "../util/utils";
 export class CheckCommand extends Command {
   constructor(command) {
     super(command, new AlertKeyboard(command.id));
+    this.noFilter = "You have no " + this.id + " with current Filter.";
+    this.alertsOff = "You have alerts turned off in Settings";
   }
 
   message(filtered, id) {
@@ -15,15 +17,20 @@ export class CheckCommand extends Command {
     }
   }
 
-  count(filtered) {
-    return "(" + filtered + "/" + this.json.length + ")\n";
+  count(c) {
+    return "(" + c + "/" + this.json.length + ")\n";
   }
 
-  async execute(telegrafFunction) {
-    this.inlineKeyboard = new AlertKeyboard(this.command.id, false);
-    telegrafFunction(await this.message(), this.telegraf).catch(err =>
-      handleErr(err),
+  async execute(telegrafFunction, userId) {
+    this.inlineKeyboard = new AlertKeyboard(
+      this.command.id,
+      users.isFiltered(userId),
     );
+    const msg = await this.message(users.isFiltered(userId), userId);
+    telegrafFunction(
+      msg ? msg : this.title + "\n" + utils.bold(this.noFilter),
+      this.telegraf,
+    ).catch(err => handleErr(err));
   }
 
   get ids() {
@@ -119,7 +126,10 @@ export class CheckCommand extends Command {
     },
   ) {
     if (telegrafFunction) {
-      this.inlineKeyboard = new AlertKeyboard(this.command.id, true);
+      this.inlineKeyboard = new AlertKeyboard(
+        this.command.id,
+        users.isFiltered(id),
+      );
       if (users.db.find({ id: id }).value().notifyAlerts) {
         const messages = this.check(id, { ignoreCredits, ignoreNotified }).map(
           check => check.message,
@@ -135,17 +145,14 @@ export class CheckCommand extends Command {
           ).catch(err => handleErr(err));
         } else if (ignoreNotified) {
           telegrafFunction(
-            this.title +
-              "\n" +
-              utils.bold("You have no " + this.id + " with current Filter."),
+            this.title + "\n" + utils.bold(this.noFilter),
             this.telegraf,
           ).catch(err => handleErr(err));
         }
       } else {
-        telegrafFunction(
-          utils.bold("You have alerts turned off in Settings"),
-          this.telegraf,
-        ).catch(err => handleErr(err));
+        telegrafFunction(utils.bold(this.alertsOff), this.telegraf).catch(err =>
+          handleErr(err),
+        );
       }
     }
   }

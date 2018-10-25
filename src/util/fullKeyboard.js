@@ -22,7 +22,7 @@ export class AlertKeyboard extends FullKeyboard {
     super(selected, [
       [
         filtered
-          ? { text: "ALL", callback_data: selected }
+          ? { text: "ALL", callback_data: "all." + selected }
           : { text: "FILTER", callback_data: "filter." + selected },
       ],
       ["invasions", "bounties", "events"],

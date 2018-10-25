@@ -1,6 +1,6 @@
 import list from "./list.json";
 //USERDB
-import { state, search } from "../api.js";
+import { state, search, users } from "../api.js";
 // COMMANDS
 import { Dashboard } from "./dashboard/dashboard.js";
 import { Sortie } from "./sortie/sortie.js";
@@ -89,15 +89,16 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
   }
 
   if (command.includes(".")) {
+    const cmd = command.split(".")[0];
     const item = command.split(".")[1];
-    if (command.split(".")[0] == "add") {
+    if (cmd == "add") {
       items.add([item], userId);
       command = "settings";
       if (isCb) {
         ctx.answerCbQuery("Adding " + item + " to your item list!");
       }
       isCb = false;
-    } else if (command.split(".")[0] == "remove") {
+    } else if (cmd == "remove") {
       items.remove([item], userId);
       command = "settings";
       if (isCb) {
@@ -105,14 +106,15 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
       }
       isCb = false;
     }
-    if (command.split(".")[0] == "addInline") {
+
+    if (cmd == "addInline") {
       items.add([item], userId);
       search.add(item, ctx);
       if (isCb) {
         ctx.answerCbQuery("Adding " + item + " to your item list!");
       }
       return;
-    } else if (command.split(".")[0] == "removeInline") {
+    } else if (cmd == "removeInline") {
       items.remove([item], userId);
       search.remove(item, ctx);
       if (isCb) {
@@ -120,18 +122,64 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
       }
       return;
     }
-    if (command.split(".")[0] == "<") {
+
+    if (cmd == "<") {
       dashboard.addItem(userId, item);
       command = "configure";
       if (isCb) {
         ctx.answerCbQuery("Adding " + item + " to your custom dashboard!");
       }
-    } else if (command.split(".")[0] == ">") {
+    } else if (cmd == ">") {
       dashboard.removeItem(userId, item);
       command = "configure";
       if (isCb) {
         ctx.answerCbQuery("Removing " + item + " from your custom dashboard!");
       }
+    }
+
+    if (cmd == "filter") {
+      users.filter(userId, true);
+      switch (item) {
+        case "invasions":
+          invasions.alert(telegrafFunction, userId, {
+            ignoreCredits: false,
+            ignoreNotified: true,
+          });
+          if (isCb) {
+            ctx.answerCbQuery("Filtering invasions!");
+          }
+          break;
+        case "bounties":
+          bounties.alert(telegrafFunction, userId, {
+            ignoreCredits: false,
+            ignoreNotified: true,
+          });
+          if (isCb) {
+            ctx.answerCbQuery("Filtering bounties!");
+          }
+          break;
+        case "events":
+          events.alert(telegrafFunction, userId, {
+            ignoreCredits: false,
+            ignoreNotified: true,
+          });
+          if (isCb) {
+            ctx.answerCbQuery("Filtering events!");
+          }
+          break;
+        default:
+          alerts.alert(telegrafFunction, userId, {
+            ignoreCredits: false,
+            ignoreNotified: true,
+          });
+          if (isCb) {
+            ctx.answerCbQuery("Filtering alerts!");
+          }
+          break;
+      }
+    } else if (cmd == "all") {
+      users.filter(userId, false);
+      command = item;
     }
   }
 
@@ -143,31 +191,31 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
       }
       break;
     case "sortie":
-      sortie.execute(telegrafFunction);
+      sortie.execute(telegrafFunction, userId);
       if (isCb) {
         ctx.answerCbQuery("Current sortie!");
       }
       break;
     case "alerts":
-      alerts.execute(telegrafFunction);
+      alerts.execute(telegrafFunction, userId);
       if (isCb) {
         ctx.answerCbQuery("Current alerts!");
       }
       break;
     case "infos":
-      infos.execute(telegrafFunction);
+      infos.execute(telegrafFunction, userId);
       if (isCb) {
         ctx.answerCbQuery("Time of Day information!");
       }
       break;
     case "trader":
-      trader.execute(telegrafFunction);
+      trader.execute(telegrafFunction, userId);
       if (isCb) {
         ctx.answerCbQuery("Baro Ki'Teer information!");
       }
       break;
     case "updates":
-      updates.execute(telegrafFunction);
+      updates.execute(telegrafFunction, userId);
       if (isCb) {
         ctx.answerCbQuery("latest update!");
       }
@@ -190,68 +238,32 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
         ctx.answerCbQuery("Showing items in filter!");
       }
       break;
-    case "filter.alerts":
-      alerts.alert(telegrafFunction, userId, {
-        ignoreCredits: false,
-        ignoreNotified: true,
-      });
-      if (isCb) {
-        ctx.answerCbQuery("Filtering alerts!");
-      }
-      break;
-    case "filter.invasions":
-      invasions.alert(telegrafFunction, userId, {
-        ignoreCredits: false,
-        ignoreNotified: true,
-      });
-      if (isCb) {
-        ctx.answerCbQuery("Filtering invasions!");
-      }
-      break;
-    case "filter.bounties":
-      bounties.alert(telegrafFunction, userId, {
-        ignoreCredits: false,
-        ignoreNotified: true,
-      });
-      if (isCb) {
-        ctx.answerCbQuery("Filtering bounties!");
-      }
-      break;
-    case "filter.events":
-      events.alert(telegrafFunction, userId, {
-        ignoreCredits: false,
-        ignoreNotified: true,
-      });
-      if (isCb) {
-        ctx.answerCbQuery("Filtering events!");
-      }
-      break;
     case "invasions":
-      invasions.execute(telegrafFunction);
+      invasions.execute(telegrafFunction, userId);
       if (isCb) {
         ctx.answerCbQuery("Current invasions!");
       }
       break;
     case "bounties":
-      bounties.execute(telegrafFunction);
+      bounties.execute(telegrafFunction, userId);
       if (isCb) {
         ctx.answerCbQuery("Current bounties!");
       }
       break;
     case "events":
-      events.execute(telegrafFunction);
+      events.execute(telegrafFunction, userId);
       if (isCb) {
         ctx.answerCbQuery("Ongoing events!");
       }
       break;
     case "missions":
-      missions.execute(telegrafFunction);
+      missions.execute(telegrafFunction, userId);
       if (isCb) {
         ctx.answerCbQuery("Missions with average times!");
       }
       break;
     case "modifiers":
-      modifiers.execute(telegrafFunction);
+      modifiers.execute(telegrafFunction, userId);
       if (isCb) {
         ctx.answerCbQuery("Sortie modifiers!");
       }
@@ -393,6 +405,6 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
 
 export function handleErr(err) {
   if (err.code != 400) {
-    console.log("[HANDLE ERROR]: ", err);
+    console.log("[HANDLE ERROR]: ", err.description);
   }
 }

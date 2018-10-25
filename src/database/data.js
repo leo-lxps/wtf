@@ -66,4 +66,16 @@ export class Data {
   clear() {
     this.DB.set(this.database, []);
   }
+
+  filter(id, boolean) {
+    this.db
+      .find({ id: id })
+      .assign({ filtered: boolean })
+      .write();
+  }
+
+  isFiltered(id) {
+    if (this.getById(id)) return this.getById(id).filtered;
+    return false;
+  }
 }
