@@ -15,6 +15,10 @@ export const times = new Data("times");
 export const notifications = new Data("notifications");
 export const search = new Search();
 
+if(config.token == '???') {
+  throw "No token specified, please replace ??? in config.json with your telegram bot token.\n"+
+  "To generate new token see: https://core.telegram.org/bots#botfather"
+}
 export let bot = new Bot(config.token);
 bot.use(commandParts());
 
