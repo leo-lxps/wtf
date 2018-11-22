@@ -15,6 +15,7 @@ export class Infos extends Command {
     );
     this.dayEmote = "☀";
     this.nightEmote = "🌙";
+    this.coldEmote  = "❄️";
   }
 
   message() {
@@ -26,6 +27,8 @@ export class Infos extends Command {
       this.title +
       "\n" +
       this.cetusCircle +
+      "\n" +
+      this.vallisCycle +
       "\n" +
       this.earthCircle +
       "\n\n" +
@@ -42,6 +45,18 @@ export class Infos extends Command {
         (ec.isDay ? this.dayEmote : this.nightEmote) +
         " " +
         utils.italic(ec.timeLeft)
+      );
+    }
+  }
+
+  get vallisCycle() {
+    if (state.ws) {
+      const cc = state.ws.vallisCycle;
+      return (
+        utils.bold("Vallis: ") +
+        (cc.isWarm ? this.dayEmote : this.coldEmote) +
+        " " +
+        utils.italic(cc.timeLeft)
       );
     }
   }

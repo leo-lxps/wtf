@@ -6,6 +6,7 @@ import { users } from "../../api";
 export class Bounties extends CheckCommand {
   constructor(command) {
     super(command);
+    this.syndicateList = ["Ostrons", "Solaris United"];
   }
 
   rewards(ignoreCredits) {
@@ -36,16 +37,30 @@ export class Bounties extends CheckCommand {
     return [];
   }
 
+  get syndicates() {
+    return this.json.filter(s => this.syndicateList.includes(s.syndicate));
+  }
+
   get bounties() {
     return this.json.find(s => s.syndicate == "Ostrons");
+  }
+
+  get jobs() {
+    let jobs = [];
+    if (this.syndicates) {
+      this.syndicates.forEach(syndicate => {
+        jobs.concat(syndicate.jobs);
+      });
+    }
+    return jobs;
   }
 
   translateCheck(job, { allRewards, filtered } = {}) {
     return this.translateJob(job, allRewards);
   }
 
-  count(filtered) {
-    return "(" + filtered + "/" + this.bounties.jobs.length + ")\n";
+  count(c) {
+    return "(" + c + "/" + this.bounties.jobs.length + ")\n";
   }
 
   translate(checks, filtered, id) {
@@ -78,8 +93,8 @@ export class Bounties extends CheckCommand {
 
   rewardsOfCheck(job, ignoreCredits) {
     if (Array.isArray(job.rewardPool)) {
-      return job.rewardPool.filter(
-        r => (ignoreCredits ? !r.includes("Credits Cache") : true),
+      return job.rewardPool.filter(r =>
+        ignoreCredits ? !r.includes("Credits Cache") : true,
       );
     }
     return [];
@@ -110,8 +125,8 @@ export class Bounties extends CheckCommand {
                   .join(" | ")
                   .toUpperCase()
             : typeof job.rewardPool == "string"
-              ? job.rewardPool
-              : ""),
+            ? job.rewardPool
+            : ""),
       )
     );
   }

@@ -76,7 +76,7 @@ export class Times extends Command {
   }
 
   add(args, userId, sortie, telegrafFunction) {
-    if (users.db.find({ id: userId }).value().isAdmin) {
+    if (this.isAdmin(userId)) {
       if (
         this.parseTimes(args) &&
         sortie &&

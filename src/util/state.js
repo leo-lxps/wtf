@@ -79,13 +79,13 @@ export class State {
       })
       .catch(err => {
         console.log("[STATE FETCHING ERROR]: ", err);
-        alerts.ids.forEach(id => notifications.add({ id: id }));
-        invasions.ids.forEach(id => notifications.add({ id: id }));
-        events.ids.forEach(id => notifications.add({ id: id }));
-        bounties.ids.forEach(id => notifications.add({ id: id }));
-        sortie.ids.forEach(id => notifications.add({ id: id }));
-        updates.ids.forEach(id => notifications.add({ id: id }));
-        trader.ids.forEach(id => notifications.add({ id: id }));
+        // alerts.ids.forEach(id => notifications.add({ id: id }));
+        // invasions.ids.forEach(id => notifications.add({ id: id }));
+        // events.ids.forEach(id => notifications.add({ id: id }));
+        // bounties.ids.forEach(id => notifications.add({ id: id }));
+        // sortie.ids.forEach(id => notifications.add({ id: id }));
+        // updates.ids.forEach(id => notifications.add({ id: id }));
+        // trader.ids.forEach(id => notifications.add({ id: id }));
       });
   }
 

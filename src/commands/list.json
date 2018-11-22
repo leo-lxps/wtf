@@ -1,95 +1,117 @@
 [
-    {
-        "id": "sortie",
-        "help": {
-            "description": "shows sortie information"
-        },
-        "sub": "sortie"
+  {
+    "id": "sortie",
+    "help": {
+      "description": "shows sortie information"
     },
-    {
-        "id": "alerts",
-        "help": {
-            "description": "Show Alerts"
-        },
-        "sub": "alerts"
+    "sub": "sortie"
+  },
+  {
+    "id": "alerts",
+    "help": {
+      "description": "Show Alerts"
     },
-    {
-        "id": "dashboard",
-        "help": {
-            "description": "Shows Information"
-        }
-    },
-    {
-        "id": "items",
-        "help": {
-            "description": "Show alert items"
-        }
-    },
-    {
-        "id": "invasions",
-        "help": {
-            "description": "Show invasions"
-        },
-        "sub": "invasions"
-    },
-    {
-        "id": "bounties",
-        "help": {
-            "description": "Show bounties"
-        },
-        "sub": "syndicateMissions"
-    },
-    {
-        "id": "events",
-        "help": {
-            "description": "Show events"
-        },
-        "sub": "events"
-    },
-    {
-        "id": "missions",
-        "help": {
-            "description": "Show bounties"
-        },
-        "fixed": "missionTypes"
-    },
-    {
-        "id": "modifiers",
-        "help": {
-            "description": "Show events"
-        },
-        "sub": "sortie"
-    },
-    {
-        "id": "times",
-        "help": {
-            "description": "Add times"
-        }
-    },
-    {
-        "id": "settings",
-        "help": {
-            "description": "Change stuff"
-        }
-    },
-    {
-        "id": "updates",
-        "help": {
-            "description": "Show updates"
-        },
-        "sub": "news"
-    },
-    {
-        "id": "infos",
-        "help": {
-            "description": "Show info"
-        }
-    },
-    {
-        "id": "trader",
-        "help": {
-            "description": "Show info"
-        },
-        "sub": "voidTrader"
+    "sub": "alerts"
+  },
+  {
+    "id": "dashboard",
+    "help": {
+      "description": "Shows Information"
     }
+  },
+  {
+    "id": "items",
+    "help": {
+      "description": "Show alert items"
+    }
+  },
+  {
+    "id": "invasions",
+    "help": {
+      "description": "Show invasions"
+    },
+    "sub": "invasions"
+  },
+  {
+    "id": "bounties",
+    "help": {
+      "description": "Show bounties"
+    },
+    "sub": "syndicateMissions"
+  },
+  {
+    "id": "events",
+    "help": {
+      "description": "Show events"
+    },
+    "sub": "events"
+  },
+  {
+    "id": "missions",
+    "help": {
+      "description": "Show bounties"
+    },
+    "fixed": "missionTypes"
+  },
+  {
+    "id": "modifiers",
+    "help": {
+      "description": "Show events"
+    },
+    "sub": "sortie"
+  },
+  {
+    "id": "times",
+    "help": {
+      "description": "Add times"
+    },
+    "admin": true
+  },
+  {
+    "id": "settings",
+    "help": {
+      "description": "Change stuff"
+    }
+  },
+  {
+    "id": "updates",
+    "help": {
+      "description": "Show updates"
+    },
+    "sub": "news"
+  },
+  {
+    "id": "infos",
+    "help": {
+      "description": "Show info"
+    }
+  },
+  {
+    "id": "trader",
+    "help": {
+      "description": "Show info"
+    },
+    "sub": "voidTrader"
+  },
+  {
+    "id": "kill",
+    "help": {
+      "description": "Shut down"
+    },
+    "admin": true
+  },
+  {
+    "id": "reboot",
+    "help": {
+      "description": "Restart"
+    },
+    "admin": true
+  },
+  {
+    "id": "update",
+    "help": {
+      "description": "Update Warframe items"
+    },
+    "admin": true
+  }
 ]

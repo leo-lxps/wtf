@@ -1,11 +1,11 @@
 import { utils } from "../util/utils";
-import { state } from "../api";
+import { state, users } from "../api";
 import { handleErr } from "./handler";
 
 export class Command {
   constructor(command, keyboard) {
     this.command = command;
-    const { id, help } = command;
+    const { id, help, admin } = command;
     if (!id) {
       throw "Id for Command not defined";
     }
@@ -14,6 +14,7 @@ export class Command {
     this.msg = "No message set";
     this.keyboard = keyboard;
     this.title = utils.title(id);
+    this.needsAdmin = admin;
   }
 
   get inlineKeyboard() {
@@ -47,10 +48,16 @@ export class Command {
   /**
    * execute command
    */
-  execute(telegrafFunction) {
-    telegrafFunction(this.message(), this.telegraf).catch(err =>
-      handleErr(err),
-    );
+  execute(telegrafFunction, userId) {
+    if (userId && this.needsAdmin && !this.isAdmin(userId)) {
+      telegrafFunction("User not an admin!", this.telegraf).catch(err =>
+        handleErr(err),
+      );
+    } else {
+      telegrafFunction(this.message(), this.telegraf).catch(err =>
+        handleErr(err),
+      );
+    }
   }
 
   addToMsg(messagePart) {
@@ -65,6 +72,13 @@ export class Command {
     if (this.command.sub && state.ws) {
       return state.ws[this.command.sub];
     }
+  }
+
+  isAdmin(userId) {
+    if (userId) {
+      return users.db.find({ id: userId }).value().isAdmin;
+    }
+    return false;
   }
 
   parseItems(items) {
