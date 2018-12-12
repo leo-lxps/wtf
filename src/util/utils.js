@@ -82,4 +82,9 @@ export const utils = {
   equals(a, b) {
     return a.toUpperCase().trim() == b.toUpperCase().trim();
   },
+
+  isString(obj) {
+    return typeof obj == "string" || obj instanceof String
+  }
+
 };

@@ -1,5 +1,6 @@
 import { CheckCommand } from "../checkCommand";
 import { utils } from "../../util/utils";
+import { isString } from "util";
 
 export class Events extends CheckCommand {
   constructor(command) {
@@ -12,8 +13,8 @@ export class Events extends CheckCommand {
       utils.code("━┫ ") +
       (e.description
         ? utils.bold(e.description) +
-          (e.faction ? "\n" + utils.tab(12) + e.faction : "") +
-          "\n"
+        (e.faction ? "\n" + utils.tab(12) + e.faction : "") +
+        "\n"
         : e.tooltip
           ? utils.bold(e.tooltip.replace("Tool Tip", "")) + "\n"
           : e.faction
@@ -22,54 +23,54 @@ export class Events extends CheckCommand {
     const score = e =>
       e.scoreLocTag
         ? e.scoreLocTag +
-          " " +
-          (e.maximumScore ? ": `" + e.maximumScore + "`" : "") +
-          "\n" +
-          utils.tab(6)
+        " " +
+        (e.maximumScore ? ": `" + e.maximumScore + "`" : "") +
+        "\n" +
+        utils.tab(6)
         : "";
     const rewards = e =>
       e.rewards
         ? Array.isArray(e.rewards)
           ? e.rewards.length > 0
             ? utils.bold("Rewards: \n") +
-              utils.code(
-                utils.tab(6) +
-                  e.rewards
-                    .reduce((s, r) => {
-                      if (typeof r == "string" || r instanceof String) {
-                        s.push(r);
-                      } else {
-                        if (r.asString) {
-                          s.push(r.asString);
-                        } else if (r.itemsStr) {
-                          s.push(r.itemsStr);
-                        } else {
-                          s.push(noReward);
-                        }
-                      }
-                      return s;
-                    }, [])
-                    .map(s => s.toUpperCase())
-                    .join("\n" + utils.tab(6)),
-              ) +
-              "\n"
+            utils.code(
+              utils.tab(6) +
+              e.rewards
+                .reduce((s, r) => {
+                  if (isString(r)) {
+                    s.push(r);
+                  } else {
+                    if (r.asString) {
+                      s.push(r.asString);
+                    } else if (r.itemsStr) {
+                      s.push(r.itemsStr);
+                    } else {
+                      s.push(noReward);
+                    }
+                  }
+                  return s;
+                }, [])
+                .map(s => s.toUpperCase())
+                .join("\n" + utils.tab(6)),
+            ) +
+            "\n"
             : e.jobs
               ? e.jobs.length > 0
                 ? e.jobs.reduce(
-                    (str, e, i) => (str += this.translateJob(e) + "\n"),
-                    "",
-                  )
+                  (str, e, i) => (str += this.translateJob(e) + "\n"),
+                  "",
+                )
                 : noReward
               : noReward
-          : typeof e.rewards == "string" || e.rewards instanceof String
+          : isString(e.rewards)
             ? e.rewards
             : noReward
         : e.jobs
           ? e.jobs.length > 0
             ? e.jobs.reduce(
-                (str, e, i) => (str += this.translateJob(e) + "\n"),
-                "",
-              )
+              (str, e, i) => (str += this.translateJob(e) + "\n"),
+              "",
+            )
             : noReward
           : noReward;
     const node = e =>
@@ -96,25 +97,26 @@ export class Events extends CheckCommand {
       utils.code("━┫ ") +
       utils.bold(
         job.type +
-          " (" +
-          job.enemyLevels[0] +
-          " - " +
-          job.enemyLevels[1] +
-          ") [" +
-          job.standingStages.reduce((sum, s) => (sum += s), 0) +
-          "]",
+        " (" +
+        job.enemyLevels[0] +
+        " - " +
+        job.enemyLevels[1] +
+        ") [" +
+        job.standingStages.reduce((sum, s) => (sum += s), 0) +
+        "]",
       ) +
       "\n" +
       utils.code(
         utils.tab(3) +
-          job.rewardPool
-            .reduce(
-              (str, r, i) =>
-                (i + 1) % 2 == 0
-                  ? (str += r + ",\n" + utils.tab(3))
-                  : (str += r + ", "),
-              "",
-            )
+          isString(job.rewardPool)
+          ? job.rewardPool
+          : job.rewardPool.reduce(
+            (str, r, i) =>
+              (i + 1) % 2 == 0
+                ? (str += r + ",\n" + utils.tab(3))
+                : (str += r + ", "),
+            "",
+          )
             .toUpperCase(),
       )
     );
