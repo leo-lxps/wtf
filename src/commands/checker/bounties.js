@@ -44,6 +44,7 @@ export class Bounties extends CheckCommand {
   get bounties() {
     const solarSynd = this.json.find(s => s.syndicate == "Solaris United");
     const ostrSynd = this.json.find(s => s.syndicate == "Ostrons");
+    ostrSynd.jobs =  this.json.find(s => s.syndicate == "Ostrons").jobs;
     if (ostrSynd.jobs.length > 0 && solarSynd.jobs.length > 0) {
       ostrSynd.jobs = ostrSynd.jobs.concat(solarSynd.jobs);
     }
