@@ -47,6 +47,7 @@ export class Bounties extends CheckCommand {
     if (ostrSynd.jobs.length > 0 && solarSynd.jobs.length > 0) {
       ostrSynd.jobs = ostrSynd.jobs.concat(solarSynd.jobs);
     }
+    console.log(ostrSynd.jobs.length)
     return ostrSynd;
   }
 
