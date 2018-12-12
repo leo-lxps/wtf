@@ -68,7 +68,7 @@ export class Bounties extends CheckCommand {
       ? this.check(id, { ignoreCredits: false, ignoreNotified: true }).map(
         c => c.check,
       )
-      : checks.find(s => s.syndicate == "Ostrons").jobs;
+      : this.jobs;
 
     const msg = cmds.reduce(
       (str, check) =>
