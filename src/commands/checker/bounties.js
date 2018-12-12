@@ -36,7 +36,7 @@ export class Bounties extends CheckCommand {
 
   get syndicates() {
     const syndicates = this.json.filter(s => this.syndicateList.includes(s.syndicate));
-    console.log(syndicates.length)
+    console.log("sydicates: ", syndicates.length)
     return syndicates
   }
 
@@ -46,11 +46,12 @@ export class Bounties extends CheckCommand {
 
   get jobs() {
     let jobs = [];
-    if (this.syndicates) {
-      this.syndicates.forEach(syndicate => {
-        jobs.concat(syndicate.jobs);
-      });
-    }
+    this.syndicates.forEach(syndicate => {
+      syndicate.jobs.forEach(job => {
+        jobs.push(job);
+      })
+    });
+    console.log("jobs: ", jobs.length)
     return jobs;
   }
 
