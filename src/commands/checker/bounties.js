@@ -11,7 +11,7 @@ export class Bounties extends CheckCommand {
 
   rewards(ignoreCredits) {
     if (this.json) {
-      return this.bounties.jobs.reduce(
+      return this.jobs.reduce(
         (rewards, check) =>
           rewards.concat({
             id: check.id,
@@ -31,10 +31,7 @@ export class Bounties extends CheckCommand {
   }
 
   get ids() {
-    if (this.bounties) {
-      return this.bounties.jobs.map(c => c.id);
-    }
-    return [];
+    return this.jobs.map(c => c.id);
   }
 
   get syndicates() {
@@ -42,10 +39,7 @@ export class Bounties extends CheckCommand {
   }
 
   get bounties() {
-    const ostrSynd = JSON.parse(JSON.stringify(this.json.find(s => s.syndicate == "Ostrons")));
-    ostrSynd.jobs = this.jobs
-    console.log(ostrSynd.jobs.length)
-    return ostrSynd;
+    return this.json.find(s => s.syndicate == "Ostrons");
   }
 
   get jobs() {
@@ -55,6 +49,7 @@ export class Bounties extends CheckCommand {
         jobs.concat(syndicate.jobs);
       });
     }
+    console.log(jobs.length)
     return jobs;
   }
 
@@ -63,7 +58,7 @@ export class Bounties extends CheckCommand {
   }
 
   count(c) {
-    return "(" + c + "/" + this.bounties.jobs.length + ")\n";
+    return "(" + c + "/" + this.jobs.length + ")\n";
   }
 
   translate(checks, filtered, id) {
