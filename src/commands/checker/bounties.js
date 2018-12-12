@@ -42,7 +42,12 @@ export class Bounties extends CheckCommand {
   }
 
   get bounties() {
-    return this.json.find(s => s.syndicate == "Ostrons");
+    const solarSynd = this.json.find(s => s.syndicate == "Solaris United");
+    const ostrSynd = this.json.find(s => s.syndicate == "Ostrons");
+    if (ostrSynd.jobs.length > 0 && solarSynd.jobs.length > 0) {
+      return ostrSynd.jobs.concat(solarSynd.jobs);
+    }
+    return ostrSynd;
   }
 
   get jobs() {
@@ -66,8 +71,8 @@ export class Bounties extends CheckCommand {
   translate(checks, filtered, id) {
     const cmds = filtered
       ? this.check(id, { ignoreCredits: false, ignoreNotified: true }).map(
-          c => c.check,
-        )
+        c => c.check,
+      )
       : checks.find(s => s.syndicate == "Ostrons").jobs;
 
     const msg = cmds.reduce(
@@ -105,26 +110,26 @@ export class Bounties extends CheckCommand {
       utils.code("━┫ ") +
       utils.bold(
         job.type +
-          " (" +
-          job.enemyLevels[0] +
-          " - " +
-          job.enemyLevels[1] +
-          ") [" +
-          job.standingStages.reduce((sum, s) => (sum += s), 0) +
-          "]",
+        " (" +
+        job.enemyLevels[0] +
+        " - " +
+        job.enemyLevels[1] +
+        ") [" +
+        job.standingStages.reduce((sum, s) => (sum += s), 0) +
+        "]",
       ) +
       "\n" +
       utils.code(
         utils.tab(3) +
-          (Array.isArray(job.rewardPool)
-            ? allRewards
-              ? job.rewardPool.join(" | ").toUpperCase()
-              : "..." +
-                job.rewardPool
-                  .slice(-2)
-                  .join(" | ")
-                  .toUpperCase()
-            : typeof job.rewardPool == "string"
+        (Array.isArray(job.rewardPool)
+          ? allRewards
+            ? job.rewardPool.join(" | ").toUpperCase()
+            : "..." +
+            job.rewardPool
+              .slice(-2)
+              .join(" | ")
+              .toUpperCase()
+          : typeof job.rewardPool == "string"
             ? job.rewardPool
             : ""),
       )

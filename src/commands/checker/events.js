@@ -108,7 +108,7 @@ export class Events extends CheckCommand {
       "\n" +
       utils.code(
         utils.tab(3) +
-          isString(job.rewardPool)
+        (isString(job.rewardPool)
           ? job.rewardPool
           : job.rewardPool.reduce(
             (str, r, i) =>
@@ -116,8 +116,8 @@ export class Events extends CheckCommand {
                 ? (str += r + ",\n" + utils.tab(3))
                 : (str += r + ", "),
             "",
-          )
-            .toUpperCase(),
+          ))
+          .toUpperCase(),
       )
     );
   }
