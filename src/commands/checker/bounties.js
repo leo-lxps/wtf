@@ -27,7 +27,7 @@ export class Bounties extends CheckCommand {
   get extra() {
     let ex = []
     this.syndicates.forEach(syndicate => {
-      ex.push(syndicate.syndicate + " bounties expire in " + utils.fromNow(syndicate.expiry));
+      ex.push(utils.italic(syndicate.syndicate + " bounties expire " + utils.fromNow(syndicate.expiry)));
     })
     return (
       "\n" + ex.join("\n"));
