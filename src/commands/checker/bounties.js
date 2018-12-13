@@ -38,12 +38,8 @@ export class Bounties extends CheckCommand {
   }
 
   get syndicates() {
-    const syndicates = this.json.filter(s => this.syndicateList.includes(s.syndicate));
+    const syndicates = this.json;//.filter(s => this.syndicateList.includes(s.syndicate));
     return syndicates
-  }
-
-  get bounties() {
-    return this.json.find(s => s.syndicate == "Ostrons");
   }
 
   get jobs() {
