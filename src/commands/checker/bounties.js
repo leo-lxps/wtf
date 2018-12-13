@@ -25,9 +25,12 @@ export class Bounties extends CheckCommand {
   }
 
   get extra() {
+    let ex = []
+    this.syndicates.forEach(syndicate => {
+      ex.push(syndicate.syndicate + " bounties expire in " + syndicate.expiry);
+    })
     return (
-      "\n" + utils.italic("Expires " + utils.fromNow(this.bounties.expiry))
-    );
+      "\n" + ex.join("\n"));
   }
 
   get ids() {
@@ -81,8 +84,7 @@ export class Bounties extends CheckCommand {
         this.count(cmds.length) +
         "\n" +
         msg +
-        "\n" +
-        utils.italic("Expires " + utils.fromNow(this.bounties.expiry))
+        this.extra
       );
     } else {
       return "";
