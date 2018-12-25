@@ -10,7 +10,7 @@ export class Reboot extends Command {
      */
     execute(telegrafFunction, userId) {
         if (userId && this.needsAdmin && !this.isAdmin(userId)) {
-            telegrafFunction("User not an admin!").catch(err =>
+            telegrafFunction("User not an admin!", this.telegraf).catch(err =>
                 handleErr(err),
             );
         } else {
