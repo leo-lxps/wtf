@@ -18,7 +18,7 @@ export class Update extends Command {
         } else {
             telegrafFunction("Updating...").then(m => {
                 const exec = require('child_process').exec;
-                var yourscript = exec('sh update.sh',
+                var yourscript = exec('sh ./src/commands/admin/update.sh',
                     (error, stdout, stderr) => {
                         console.log(`${stdout}`);
                         console.log(`${stderr}`);
