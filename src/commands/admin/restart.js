@@ -1,8 +1,6 @@
-
-
 import { Command } from "../command";
 
-export class Update extends Command {
+export class Restart extends Command {
     constructor(command) {
         super(command);
     }
@@ -16,12 +14,15 @@ export class Update extends Command {
                 handleErr(err),
             );
         } else {
-            telegrafFunction("Updating...").then(m => {
+            telegrafFunction("Restarting Bot...").then(m => {
                 const exec = require('child_process').exec;
-                var yourscript = exec('sh ./src/commands/admin/update.sh',
+                exec('sh ./src/commands/admin/restart.sh',
                     (error, stdout, stderr) => {
                         console.log(`${stdout}`);
                         console.log(`${stderr}`);
+                        telegrafFunction(`${stdout}`).catch(err =>
+                            handleErr(err),
+                        );
                         if (error !== null) {
                             console.log(`exec error: ${error}`);
                         }
