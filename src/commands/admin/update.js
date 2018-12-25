@@ -16,9 +16,9 @@ export class Update extends Command {
                 handleErr(err),
             );
         } else {
-            telegrafFunction("Rebooting!").then(m => {
+            telegrafFunction("Updating...").then(m => {
                 const exec = require('child_process').exec;
-                var yourscript = exec('sh reboot.sh',
+                var yourscript = exec('sh update.sh',
                     (error, stdout, stderr) => {
                         console.log(`${stdout}`);
                         console.log(`${stderr}`);
