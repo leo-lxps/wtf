@@ -10,7 +10,7 @@ export class Kill extends Command {
    */
   execute(telegrafFunction, userId) {
     if (userId && this.needsAdmin && !this.isAdmin(userId)) {
-      telegrafFunction("User not an admin!", this.telegraf).catch(err =>
+      telegrafFunction("User not an admin!").catch(err =>
         handleErr(err),
       );
     } else {
@@ -24,7 +24,7 @@ export class Kill extends Command {
         exec('shutdown now', function (error, stdout, stderr) { callback(stdout); });
       }
 
-      telegrafFunction("Shutting down!", this.telegraf).then(m => {
+      telegrafFunction("Shutting down!").then(m => {
         // Reboot computer
         shutdown(function (output) {
           console.log(output);
