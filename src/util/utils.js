@@ -32,6 +32,10 @@ export const utils = {
     return moment(date).fromNow();
   },
 
+  getNow() {
+    return moment();
+  },
+
   tab(n) {
     return "\t".repeat(n);
   },

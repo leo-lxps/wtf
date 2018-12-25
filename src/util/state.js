@@ -9,6 +9,7 @@ import {
   bounties,
   trader,
 } from "../commands/handler";
+import { utils } from "./utils";
 
 export class State {
   constructor(
@@ -78,7 +79,7 @@ export class State {
         trader.ids.forEach(id => notifications.add({ id: id }));
       })
       .catch(err => {
-        console.log("[STATE FETCHING ERROR]: ", err);
+        console.log("[", utils.getNow(), " | STATE FETCHING ERROR]: ", err.message);
         // alerts.ids.forEach(id => notifications.add({ id: id }));
         // invasions.ids.forEach(id => notifications.add({ id: id }));
         // events.ids.forEach(id => notifications.add({ id: id }));
