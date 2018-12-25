@@ -16,7 +16,8 @@ import { Settings } from "./settings/settings.js";
 import { Updates } from "./info/updates.js";
 import { Infos } from "./info/infos.js";
 import { Trader } from "./info/trader.js";
-
+import { Kill } from "./admin/kill.js";
+import { Reboot } from "./admin/reboot.js";
 /**
  * !!! NAMES MUST BE SAME AS ID !!!
  */
@@ -33,6 +34,9 @@ export const settings = new Settings(getCommandFromId("settings"));
 export const updates = new Updates(getCommandFromId("updates"));
 export const infos = new Infos(getCommandFromId("infos"));
 export const trader = new Trader(getCommandFromId("trader"));
+export const kill = new Kill(getCommandFromId("kill"));
+export const reboot = new Reboot(getCommandFromId("reboot"));
+
 
 export const dashboard = new Dashboard(getCommandFromId("dashboard"));
 
@@ -394,6 +398,12 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
       if (isCb) {
         ctx.answerCbQuery("This will not be shown on your Dashboard!", true);
       }
+      break;
+    case "kill":
+      kill.execute(telegrafFunction, userId);
+      break;
+    case "reboot":
+      reboot.execute(telegrafFunction, userId);
       break;
     default:
       if (isCb) {

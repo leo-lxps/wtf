@@ -23,11 +23,15 @@ export class Reboot extends Command {
             function shutdown(callback) {
                 exec('shutdown -r now', function (error, stdout, stderr) { callback(stdout); });
             }
+            telegrafFunction("Rebooting!", this.telegraf).then(m => {
+                // Reboot computer
+                shutdown(function (output) {
+                    console.log(output);
+                });
+            }).catch(err =>
+                handleErr(err),
+            );
 
-            // Reboot computer
-            shutdown(function (output) {
-                console.log(output);
-            });
         }
     }
 }

@@ -24,10 +24,14 @@ export class Kill extends Command {
         exec('shutdown now', function (error, stdout, stderr) { callback(stdout); });
       }
 
-      // Reboot computer
-      shutdown(function (output) {
-        console.log(output);
-      });
+      telegrafFunction("Shutting down!", this.telegraf).then(m => {
+        // Reboot computer
+        shutdown(function (output) {
+          console.log(output);
+        });
+      }).catch(err =>
+        handleErr(err),
+      );
     }
   }
 }
