@@ -18,10 +18,13 @@ export class Update extends Command {
         } else {
             telegrafFunction("Updating...").then(m => {
                 const exec = require('child_process').exec;
-                var yourscript = exec('sh ./src/commands/admin/update.sh',
+                exec('sh ./src/commands/admin/update.sh',
                     (error, stdout, stderr) => {
                         console.log(`${stdout}`);
                         console.log(`${stderr}`);
+                        telegrafFunction(`${stdout}`).catch(err =>
+                            handleErr(err),
+                        );
                         if (error !== null) {
                             console.log(`exec error: ${error}`);
                         }
