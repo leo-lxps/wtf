@@ -1,5 +1,2 @@
-
-
-echo "Updating..."
 npm up
-echo "Finished updating!"
+echo 'Finished updating! Please /restart to receive.'

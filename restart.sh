@@ -1,1 +1,2 @@
-# not implemented
+tmux kill-session -t wtfbot
+. start.sh
