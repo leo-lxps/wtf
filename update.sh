@@ -1,5 +1,5 @@
 
 
-echo "updating..."
+echo "Updating..."
 npm up
-echo "finished updating!"'
+echo "Finished updating!"

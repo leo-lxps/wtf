@@ -17,22 +17,18 @@ export class Update extends Command {
                 handleErr(err),
             );
         } else {
-            telegrafFunction("Updating...").then(m => {
-                const exec = require('child_process').exec;
-                exec('sh ./update.sh',
-                    (error, stdout, stderr) => {
-                        console.log(`${stdout}`);
-                        console.log(`${stderr}`);
-                        telegrafFunction(`${stdout}`).catch(err =>
-                            handleErr(err),
-                        );
-                        if (error !== null) {
-                            console.log(`exec error: ${error}`);
-                        }
-                    });
-            }).catch(err =>
-                handleErr(err),
-            );
+            const exec = require('child_process').exec;
+            exec('sh ./update.sh',
+                (error, stdout, stderr) => {
+                    console.log(`${stdout}`);
+                    console.log(`${stderr}`);
+                    telegrafFunction(`${stdout}`).catch(err =>
+                        handleErr(err),
+                    );
+                    if (error !== null) {
+                        console.log(`exec error: ${error}`);
+                    }
+                });
         }
     }
 }
