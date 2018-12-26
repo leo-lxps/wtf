@@ -1,5 +1,5 @@
 import { Command } from "../command";
-import { handleErr } from "./handler";
+import { handleErr } from "../handler";
 
 export class Kill extends Command {
   constructor(command) {
