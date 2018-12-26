@@ -19,6 +19,7 @@ import { Trader } from "./info/trader.js";
 import { Kill } from "./admin/kill.js";
 import { Reboot } from "./admin/reboot.js";
 import { Update } from "./admin/update.js";
+import { Restart } from "./admin/restart.js";
 /**
  * !!! NAMES MUST BE SAME AS ID !!!
  */
@@ -38,6 +39,7 @@ export const trader = new Trader(getCommandFromId("trader"));
 export const kill = new Kill(getCommandFromId("kill"));
 export const reboot = new Reboot(getCommandFromId("reboot"));
 export const update = new Update(getCommandFromId("update"));
+export const restart = new Restart(getCommandFromId("restart"));
 
 export const dashboard = new Dashboard(getCommandFromId("dashboard"));
 
@@ -408,6 +410,9 @@ export function handleCmd({ ctx, telegrafFunction, command, args, isCb } = {}) {
       break;
     case "update":
       update.execute(telegrafFunction, userId);
+      break;
+    case "restart":
+      restart.execute(telegrafFunction, userId);
       break;
     default:
       if (isCb) {

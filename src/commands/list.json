@@ -96,14 +96,14 @@
   {
     "id": "kill",
     "help": {
-      "description": "Shut down"
+      "description": "Server shut down"
     },
     "admin": true
   },
   {
     "id": "reboot",
     "help": {
-      "description": "Restart"
+      "description": "Restart server"
     },
     "admin": true
   },
@@ -111,6 +111,13 @@
     "id": "update",
     "help": {
       "description": "Update Warframe items"
+    },
+    "admin": true
+  },
+  {
+    "id": "restart",
+    "help": {
+      "description": "Restart bot only"
     },
     "admin": true
   }
