@@ -4,6 +4,6 @@
 !/resources/
 !/resources/**
 !package.json
-!start.js
+!server.js
 !.gitignore
 !LICENSE
