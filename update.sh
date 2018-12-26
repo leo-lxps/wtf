@@ -1,1 +1,1 @@
-npm up
+npm up -v & bash
