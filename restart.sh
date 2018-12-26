@@ -1,3 +1,3 @@
-# tmux kill-session -t wtfbot
-exit
+tmux detach
+tmux kill-session -t wtfbot
 . start.sh
