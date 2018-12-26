@@ -1,6 +1,7 @@
 
 
 import { Command } from "../command";
+import { handleErr } from "./handler";
 
 export class Update extends Command {
     constructor(command) {

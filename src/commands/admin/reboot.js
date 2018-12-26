@@ -1,4 +1,5 @@
 import { Command } from "../command";
+import { handleErr } from "./handler";
 
 export class Reboot extends Command {
     constructor(command) {
