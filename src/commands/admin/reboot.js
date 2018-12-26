@@ -22,7 +22,7 @@ export class Reboot extends Command {
 
             // Create shutdown function
             function shutdown(callback) {
-                exec('shutdown -r now', function (error, stdout, stderr) { callback(stdout); });
+                exec('sudo shutdown -r now', function (error, stdout, stderr) { callback(stdout); });
             }
             telegrafFunction("Rebooting server...").then(m => {
                 // Reboot computer
