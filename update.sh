@@ -1,3 +1,2 @@
-echo "updating..."
-tmux new -d 'npm up'
-echo "finished updating!"
+
+tmux new -d 'echo "updating..."; npm up; echo "finished updating!"'

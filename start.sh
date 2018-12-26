@@ -1,2 +1,2 @@
-echo "starting..."
-tmux new -d 'npm start'
+
+tmux new -d 'echo "starting..."; npm start' 
