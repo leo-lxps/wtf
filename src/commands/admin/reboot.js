@@ -24,7 +24,7 @@ export class Reboot extends Command {
             function shutdown(callback) {
                 exec('shutdown -r now', function (error, stdout, stderr) { callback(stdout); });
             }
-            telegrafFunction("Rebooting!").then(m => {
+            telegrafFunction("Rebooting server...").then(m => {
                 // Reboot computer
                 shutdown(function (output) {
                     console.log(output);

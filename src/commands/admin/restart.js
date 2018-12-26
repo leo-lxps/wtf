@@ -15,7 +15,7 @@ export class Restart extends Command {
                 handleErr(err),
             );
         } else {
-            telegrafFunction("Restarting Bot...").then(m => {
+            telegrafFunction("Restarting...").then(m => {
                 const exec = require('child_process').exec;
                 exec('sh ./restart.sh',
                     (error, stdout, stderr) => {

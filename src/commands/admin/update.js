@@ -15,7 +15,7 @@ export class Update extends Command {
                 handleErr(err),
             );
         } else {
-            telegrafFunction("Updating...").then(m => {
+            telegrafFunction("Updating started, please remain in your missions until this is complete.").then(m => {
                 const exec = require('child_process').exec;
                 exec('sh ./update.sh',
                     (error, stdout, stderr) => {
