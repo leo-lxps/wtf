@@ -7,5 +7,6 @@
 !server.js
 !restart.sh
 !update.sh
+!start.sh
 !.gitignore
 !LICENSE
