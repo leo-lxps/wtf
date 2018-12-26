@@ -5,5 +5,7 @@
 !/resources/**
 !package.json
 !server.js
+!restart.sh
+!update.sh
 !.gitignore
 !LICENSE
