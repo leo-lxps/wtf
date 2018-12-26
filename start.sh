@@ -1,2 +1,2 @@
 echo 'Starting...'
-tmux new -d 'npm start' -s wtfbot
+tmux new -s wtfbot -d 'npm start'
