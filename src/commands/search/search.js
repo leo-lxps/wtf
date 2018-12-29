@@ -425,16 +425,18 @@ export class Search {
             ],
           },
         });
+      } else {
+        Array.prototype.move = function (from, to) {
+          this.splice(to, 0, this.splice(from, 1)[0]);
+        };
+        let indExactMatch = inlineObjects.findIndex((o) => o.title == search);
+        console.log("ind", indExactMatch);
+        console.log("prev", inlineObjects[0])
+        let t = inlineObjects.move(indExactMatch, 0);
+        console.log("after", inlineObjects[0])
+        console.log("t", t[0])
       }
-      Array.prototype.move = function (from, to) {
-        this.splice(to, 0, this.splice(from, 1)[0]);
-      };
-      let indExactMatch = inlineObjects.findIndex((o) => o.title == search);
-      console.log(indExactMatch);
-      console.log(inlineObjects[0])
-      let t = inlineObjects.move(indExactMatch, 0);
-      console.log(inlineObjects[0])
-      console.log(t[0])
+
       this.answerQuery(ctx, inlineObjects);
     }
   }
@@ -443,7 +445,7 @@ export class Search {
 
   answerQuery(ctx, inlineObjects) {
     const offset = parseInt(ctx.inlineQuery.offset || 0) * this.queryCount;
-    console.log(offset);
+    console.log("offset", offset);
     ctx
       .answerInlineQuery(inlineObjects.slice(offset, offset + this.results), {
         cache_time: 100,
