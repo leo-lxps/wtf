@@ -65,12 +65,15 @@ export class Search {
   }
 
   query(ctx, search, userId) {
+    console.log("this", search)
+    console.log("last", this.lastQuery);
     if (search == this.lastQuery) {
       this.queryCount++;
     } else {
       this.queryCount = 0;
     }
     this.lastQuery = search;
+    console.log("count", queryCount)
 
     let inlineObjects = [];
     let inlinePhotos = [];
@@ -427,6 +430,7 @@ export class Search {
         });
       } else {
         let indExactMatch = inlineObjects.findIndex((o) => o.title == search);
+        console.log(indExactMatch);
         if(indExactMatch > 0) {
           Array.prototype.move = function (from, to) {
             this.splice(to, 0, this.splice(from, 1)[0]);
@@ -442,6 +446,7 @@ export class Search {
 
 
   answerQuery(ctx, inlineObjects) {
+    console.log("ctx offset", ctx.inlineQuery.offset)
     const offset = parseInt(ctx.inlineQuery.offset || 0) * this.queryCount;
     console.log("offset", offset);
     ctx
