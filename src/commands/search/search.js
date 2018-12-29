@@ -154,22 +154,22 @@ export class Search {
                     : "") +
                   (item.prices.soldPrice > 0
                     ? "Sold " +
-                      utils.code(item.prices.soldCount) +
-                      " " +
-                      utils.bold(item.name) +
-                      " for an average of " +
-                      utils.code(item.prices.soldPrice) +
-                      "p\n"
+                    utils.code(item.prices.soldCount) +
+                    " " +
+                    utils.bold(item.name) +
+                    " for an average of " +
+                    utils.code(item.prices.soldPrice) +
+                    "p\n"
                     : "") +
                   (item.prices.maximum > 0
                     ? "Maximum sold price: " +
-                      utils.code(item.prices.maximum) +
-                      "p\n"
+                    utils.code(item.prices.maximum) +
+                    "p\n"
                     : "") +
                   (item.prices.minimum > 0
                     ? "Minimal sold price: " +
-                      utils.code(item.prices.minimum) +
-                      "p\n"
+                    utils.code(item.prices.minimum) +
+                    "p\n"
                     : "");
 
                 inlineObjects.push({
@@ -247,21 +247,21 @@ export class Search {
                   "\n\n" +
                   (item.demand.hasValue > 0
                     ? "Demand " +
-                      utils.code(item.demand.count) +
-                      " " +
-                      utils.bold(item.title) +
-                      " for an average of " +
-                      utils.code(item.demand.hasValue) +
-                      "p\n"
+                    utils.code(item.demand.count) +
+                    " " +
+                    utils.bold(item.title) +
+                    " for an average of " +
+                    utils.code(item.demand.hasValue) +
+                    "p\n"
                     : "") +
                   (item.supply.hasValue > 0
                     ? "Supply " +
-                      utils.code(item.supply.count) +
-                      " " +
-                      utils.bold(item.title) +
-                      " for an average of " +
-                      utils.code(item.supply.hasValue) +
-                      "p\n"
+                    utils.code(item.supply.count) +
+                    " " +
+                    utils.bold(item.title) +
+                    " for an average of " +
+                    utils.code(item.supply.hasValue) +
+                    "p\n"
                     : "");
 
                 inlineObjects.push({
@@ -358,8 +358,8 @@ export class Search {
           } else {
             const description = item.description
               ? item.description
-                  .replace(/\<([^>]+)\>/g, "")
-                  .replace(/[*`_]/g, "")
+                .replace(/\<([^>]+)\>/g, "")
+                .replace(/[*`_]/g, "")
               : "";
 
             inlineObjects.push({
@@ -426,12 +426,24 @@ export class Search {
           },
         });
       }
+      Array.prototype.move = function (from, to) {
+        this.splice(to, 0, this.splice(from, 1)[0]);
+      };
+      let indExactMatch = inlineObjects.findIndex((o) => o.title == search);
+      console.log(indExactMatch);
+      console.log(inlineObjects[0])
+      let t = inlineObjects.move(indExactMatch, 0);
+      console.log(inlineObjects[0])
+      console.log(t[0])
       this.answerQuery(ctx, inlineObjects);
     }
   }
 
+
+
   answerQuery(ctx, inlineObjects) {
     const offset = parseInt(ctx.inlineQuery.offset || 0) * this.queryCount;
+    console.log(offset);
     ctx
       .answerInlineQuery(inlineObjects.slice(offset, offset + this.results), {
         cache_time: 100,
@@ -522,41 +534,41 @@ export class Search {
   translateOther(item) {
     const info = item
       ? (item.description
-          ? "\n\t\t\t" +
-            utils.italic(
-              item.description
-                .replace(/\<([^>]+)\>/g, "")
-                .replace(/[*`_]/g, ""),
-            )
-          : "") +
-        (item.polarity
-          ? "\n\t\t\tPolarity: " + utils.code(item.polarity)
-          : "") +
-        (item.baseDrain && item.fusionLimit
-          ? "\n\t\t\tDrain: " +
-            utils.code(item.baseDrain + "-" + item.fusionLimit)
-          : "")
+        ? "\n\t\t\t" +
+        utils.italic(
+          item.description
+            .replace(/\<([^>]+)\>/g, "")
+            .replace(/[*`_]/g, ""),
+        )
+        : "") +
+      (item.polarity
+        ? "\n\t\t\tPolarity: " + utils.code(item.polarity)
+        : "") +
+      (item.baseDrain && item.fusionLimit
+        ? "\n\t\t\tDrain: " +
+        utils.code(item.baseDrain + "-" + item.fusionLimit)
+        : "")
       : "";
 
     const drops = item.drops
       ? utils.bold("DROPS:\n") +
-        item.drops
-          .splice(0, 5)
-          .reduce(
-            (str, d) =>
-              (str +=
-                utils.bold(d.type) +
-                ": \n" +
-                utils.tab(6) +
-                utils.code(d.location.toUpperCase()) +
-                "\n" +
-                utils.tab(6) +
-                d.rarity +
-                " (" +
-                utils.italic(d.chance * 100) +
-                "%)\n"),
-            "",
-          )
+      item.drops
+        .splice(0, 5)
+        .reduce(
+          (str, d) =>
+            (str +=
+              utils.bold(d.type) +
+              ": \n" +
+              utils.tab(6) +
+              utils.code(d.location.toUpperCase()) +
+              "\n" +
+              utils.tab(6) +
+              d.rarity +
+              " (" +
+              utils.italic(d.chance * 100) +
+              "%)\n"),
+          "",
+        )
       : "";
 
     return utils.title(item.name) + info + "\n\n" + drops;
@@ -647,8 +659,8 @@ export class Search {
     let magazine =
       weapon.magazineSize && weapon.ammo
         ? "Magazine: " +
-          utils.code(weapon.magazineSize + "|" + weapon.ammo) +
-          "\n"
+        utils.code(weapon.magazineSize + "|" + weapon.ammo) +
+        "\n"
         : "";
     let reload = weapon.reloadTime
       ? "Reload Time: " + utils.code(weapon.reloadTime) + "\n"
@@ -661,39 +673,39 @@ export class Search {
       : "";
     let CC = weapon.criticalChance
       ? "Critical Change: " +
-        utils.code(Math.round(weapon.criticalChance * 100) + "%") +
-        "\n"
+      utils.code(Math.round(weapon.criticalChance * 100) + "%") +
+      "\n"
       : "";
     let CM = weapon.criticalMultiplier
       ? "Critical Multiplier: " +
-        utils.code(weapon.criticalMultiplier + "x") +
-        "\n"
+      utils.code(weapon.criticalMultiplier + "x") +
+      "\n"
       : "";
     let SC = weapon.procChance
       ? "Status Chance: " +
-        utils.code(Math.round(weapon.procChance * 100) + "%") +
-        "\n"
+      utils.code(Math.round(weapon.procChance * 100) + "%") +
+      "\n"
       : "";
     let FR = weapon.fireRate
       ? "Fire Rate: " +
-        utils.code(Math.round(weapon.fireRate * 100) / 100) +
-        "\n"
+      utils.code(Math.round(weapon.fireRate * 100) / 100) +
+      "\n"
       : "";
     let AS = weapon.fireRate
       ? "Attack Speed: " +
-        utils.code(Math.round(weapon.fireRate * 100) / 100) +
-        "\n"
+      utils.code(Math.round(weapon.fireRate * 100) / 100) +
+      "\n"
       : "";
     let MR = weapon.masteryReq
       ? "MR Lock: " + utils.code(weapon.masteryReq) + "\n"
       : "";
     let disposition = weapon.disposition
       ? "Riven Disposition: " +
-        utils.code(
-          dispoFullEmote.repeat(parseInt(weapon.disposition)) +
-            dispEmptyEmote.repeat(5 - parseInt(weapon.disposition)),
-        ) +
-        "\n"
+      utils.code(
+        dispoFullEmote.repeat(parseInt(weapon.disposition)) +
+        dispEmptyEmote.repeat(5 - parseInt(weapon.disposition)),
+      ) +
+      "\n"
       : "";
     let trade = weapon.tradable
       ? utils.bold(weapon.name + " is tradable!") + "\n"
