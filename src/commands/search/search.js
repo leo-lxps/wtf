@@ -426,15 +426,13 @@ export class Search {
           },
         });
       } else {
-        Array.prototype.move = function (from, to) {
-          this.splice(to, 0, this.splice(from, 1)[0]);
-        };
         let indExactMatch = inlineObjects.findIndex((o) => o.title == search);
-        console.log("ind", indExactMatch);
-        console.log("prev", inlineObjects[0])
-        let t = inlineObjects.move(indExactMatch, 0);
-        console.log("after", inlineObjects[0])
-        console.log("t", t[0])
+        if(indExactMatch > 0) {
+          Array.prototype.move = function (from, to) {
+            this.splice(to, 0, this.splice(from, 1)[0]);
+          };
+          inlineObjects.move(indExactMatch, 0);
+        }
       }
 
       this.answerQuery(ctx, inlineObjects);
